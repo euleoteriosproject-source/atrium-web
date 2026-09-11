@@ -5,6 +5,10 @@ import { cn } from "@/lib/utils";
 export const buttonVariants = {
   primary:
     "overflow-hidden border-navy-950 bg-navy-950 text-offwhite before:absolute before:inset-y-[-1px] before:left-[-1px] before:w-1 before:bg-gold-500 before:content-[''] hover:border-navy-800 hover:bg-navy-800 hover:before:bg-gold-300 active:translate-y-0 active:bg-navy-950",
+  accent:
+    "border-gold-500 bg-gold-500 text-navy-950 hover:border-gold-300 hover:bg-gold-300 active:border-gold-500 active:bg-gold-500 focus-visible:outline-gold-300",
+  outlineDark:
+    "border-offwhite/35 bg-transparent text-offwhite hover:border-offwhite hover:bg-offwhite/8 hover:text-offwhite active:border-offwhite/75 active:bg-offwhite/12 focus-visible:outline-gold-300",
   secondary:
     "border-navy-950/25 bg-transparent text-navy-950 hover:border-navy-950 hover:bg-navy-950 hover:text-offwhite",
   ghost: "border-transparent bg-transparent text-navy-950 hover:bg-navy-950/5",

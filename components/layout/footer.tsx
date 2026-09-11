@@ -2,7 +2,22 @@ import Link from "next/link";
 
 import { TextLink } from "../ui/text-link";
 import { Container } from "./container";
-import { primaryNavigation } from "./navigation";
+
+const solutionNavigation = [
+  { label: "Sites & Experiências", href: "/solucoes/sites-e-portais" },
+  { label: "Sistemas sob Medida", href: "/solucoes/sistemas-sob-medida" },
+  {
+    label: "Automações & Integrações",
+    href: "/solucoes/automacoes-e-integracoes",
+  },
+  { label: "IA Aplicada", href: "/solucoes/ia-aplicada" },
+] as const;
+
+const companyNavigation = [
+  { label: "Como trabalhamos", href: "/#como-trabalhamos" },
+  { label: "Case", href: "/#case" },
+  { label: "Sobre", href: "/#sobre" },
+] as const;
 
 const legalNavigation = [
   { label: "Privacidade", href: "/privacidade" },
@@ -11,10 +26,10 @@ const legalNavigation = [
 
 export function Footer() {
   return (
-    <footer className="bg-navy-950 py-12 text-offwhite sm:py-16">
+    <footer className="bg-navy-950 py-10 text-offwhite sm:py-12">
       <Container>
-        <div className="grid gap-10 border-b border-offwhite/15 pb-10 md:grid-cols-[1fr_auto] md:items-start">
-          <div className="max-w-md">
+        <div className="grid gap-10 border-b border-offwhite/12 pb-10 sm:grid-cols-2 md:grid-cols-[1.2fr_1fr_0.8fr] md:gap-12 lg:gap-20">
+          <div className="max-w-sm sm:col-span-2 md:col-span-1">
             <Link
               href="/"
               aria-label="Atrium — página inicial"
@@ -28,9 +43,31 @@ export function Footer() {
             </p>
           </div>
 
-          <nav aria-label="Navegação do rodapé">
-            <ul className="grid grid-cols-2 gap-x-8 gap-y-3 sm:grid-cols-3 md:text-right">
-              {primaryNavigation.map((item) => (
+          <nav aria-label="Soluções no rodapé">
+            <p className="text-caption font-bold tracking-wide text-gold-300 uppercase">
+              Soluções
+            </p>
+            <ul className="mt-5 space-y-3">
+              {solutionNavigation.map((item) => (
+                <li key={item.href}>
+                  <TextLink
+                    href={item.href}
+                    variant="navigation"
+                    className="text-offwhite/75 hover:text-gold-300"
+                  >
+                    {item.label}
+                  </TextLink>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <nav aria-label="Empresa no rodapé">
+            <p className="text-caption font-bold tracking-wide text-gold-300 uppercase">
+              Empresa
+            </p>
+            <ul className="mt-5 space-y-3">
+              {companyNavigation.map((item) => (
                 <li key={item.href}>
                   <TextLink
                     href={item.href}
@@ -45,8 +82,8 @@ export function Footer() {
           </nav>
         </div>
 
-        <div className="flex flex-col gap-5 pt-8 text-caption text-offwhite/60 sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} Atrium.</p>
+        <div className="flex flex-col gap-5 pt-6 text-caption text-offwhite/60 sm:flex-row sm:items-center sm:justify-between sm:pt-8">
+          <p>© 2026 Atrium.</p>
           <ul className="flex gap-5">
             {legalNavigation.map((item) => (
               <li key={item.href}>

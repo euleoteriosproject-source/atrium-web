@@ -15,6 +15,29 @@ describe("Button", () => {
     expect(button).toBeDisabled();
     expect(button).toHaveAttribute("aria-busy", "true");
   });
+
+  it("provides a gold accent variant for conversion CTAs on dark surfaces", () => {
+    render(<Button variant="accent">Descobrir oportunidades</Button>);
+
+    expect(
+      screen.getByRole("button", { name: "Descobrir oportunidades" }),
+    ).toHaveClass("bg-gold-500", "text-navy-950", "border-gold-500");
+  });
+
+  it("provides an outline variant without competing light-surface colors", () => {
+    render(<Button variant="outlineDark">Tenho um projeto em mente</Button>);
+
+    const button = screen.getByRole("button", {
+      name: "Tenho um projeto em mente",
+    });
+
+    expect(button).toHaveClass(
+      "bg-transparent",
+      "text-offwhite",
+      "border-offwhite/35",
+    );
+    expect(button).not.toHaveClass("text-navy-950", "bg-offwhite");
+  });
 });
 
 describe("Input", () => {

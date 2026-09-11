@@ -8,7 +8,7 @@ import { primaryNavigation } from "./navigation";
 
 export function Navbar() {
   return (
-    <header className="sticky top-0 z-50 border-b border-navy-950/10 bg-offwhite">
+    <header className="sticky top-0 z-50 border-b border-navy-950/10 bg-offwhite/95 backdrop-blur-md">
       <Container className="flex min-h-18 items-center justify-between gap-6">
         <Link
           href="/"

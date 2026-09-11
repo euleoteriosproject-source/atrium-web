@@ -103,6 +103,57 @@
     transition-duration: var(--motion-section);
     transition-timing-function: var(--ease-atrium);
   }
+
+  .flow-grid {
+    background-image:
+      linear-gradient(rgb(248 247 243 / 0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(248 247 243 / 0.08) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  .flow-node {
+    animation: flow-node 4.8s var(--ease-atrium) infinite;
+  }
+
+  .flow-pulse {
+    animation: flow-pulse 3.2s var(--ease-atrium) infinite;
+  }
+}
+
+@keyframes flow-node {
+  0%,
+  72%,
+  100% {
+    border-color: rgb(248 247 243 / 0.15);
+    transform: translateX(0);
+  }
+
+  12% {
+    border-color: rgb(229 201 106 / 0.55);
+    transform: translateX(2px);
+  }
+}
+
+@keyframes flow-pulse {
+  0% {
+    left: 0;
+    opacity: 0;
+    transform: translateY(-50%) scale(0.75);
+  }
+
+  18% {
+    opacity: 1;
+  }
+
+  82% {
+    opacity: 1;
+  }
+
+  100% {
+    left: calc(100% - 0.5rem);
+    opacity: 0;
+    transform: translateY(-50%) scale(1);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
