@@ -8,6 +8,7 @@ import { MobileMenu } from "@/components/layout/mobile-menu";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Eyebrow } from "@/components/ui/eyebrow";
+import { LinkButton } from "@/components/ui/link-button";
 
 import { DiagnosticNavigation } from "./diagnostic-navigation";
 import { DiagnosticProgress } from "./diagnostic-progress";
@@ -104,7 +105,12 @@ export function DiagnosticShell() {
             navegador.
           </p>
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-            <Button onClick={review}>Revisar respostas</Button>
+            <LinkButton href="/diagnostico/resultado">
+              Ver diagnóstico
+            </LinkButton>
+            <Button variant="ghost" onClick={review}>
+              Revisar respostas
+            </Button>
             <Button variant="secondary" onClick={reset}>
               Reiniciar diagnóstico
             </Button>
