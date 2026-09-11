@@ -1,9 +1,22 @@
 import type { Metadata } from "next";
+import { Manrope, Source_Serif_4 } from "next/font/google";
 import type { ReactNode } from "react";
 
 import { publicEnv } from "@/lib/env";
 
 import "./globals.css";
+
+const manrope = Manrope({
+  subsets: ["latin"],
+  variable: "--font-manrope",
+  display: "swap",
+});
+
+const sourceSerif = Source_Serif_4({
+  subsets: ["latin"],
+  variable: "--font-source-serif",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -23,7 +36,9 @@ type RootLayoutProps = Readonly<{
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="pt-BR">
-      <body>{children}</body>
+      <body className={`${manrope.variable} ${sourceSerif.variable}`}>
+        {children}
+      </body>
     </html>
   );
 }

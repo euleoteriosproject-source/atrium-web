@@ -3,12 +3,12 @@ import { describe, expect, it } from "vitest";
 
 import Home from "@/app/page";
 
-describe("home placeholder", () => {
-  it("renders the project name", () => {
+describe("M1 visual reference", () => {
+  it("renders the temporary design-system heading", () => {
     render(Home());
 
     expect(
-      screen.getByRole("heading", { level: 1, name: "Atrium" }),
+      screen.getByRole("heading", { level: 1, name: "Sistema visual Atrium" }),
     ).toBeInTheDocument();
   });
 });
