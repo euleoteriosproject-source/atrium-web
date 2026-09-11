@@ -21,7 +21,7 @@ export function Navbar() {
 
         <nav
           aria-label="Navegação principal"
-          className="hidden items-center gap-7 md:flex"
+          className="hidden items-center gap-7 lg:flex"
         >
           <ul className="flex items-center gap-7">
             {primaryNavigation.map((item) => (

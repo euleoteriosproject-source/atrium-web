@@ -31,7 +31,7 @@ export function MobileMenu() {
   }, [open]);
 
   return (
-    <div className="md:hidden">
+    <div className="lg:hidden">
       <button
         ref={triggerRef}
         type="button"
@@ -66,7 +66,7 @@ export function MobileMenu() {
       {open ? (
         <div
           id={menuId}
-          className="absolute top-full right-0 left-0 border-y border-navy-950/10 bg-offwhite px-5 py-5 shadow-card sm:px-8"
+          className="fixed inset-x-0 top-18 z-[60] border-y border-navy-950/10 bg-offwhite px-5 py-5 shadow-card sm:px-8"
         >
           <nav aria-label="Navegação móvel">
             <ul className="space-y-1">

@@ -1,10 +1,12 @@
-import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it } from "vitest";
 
 import { MobileMenu } from "@/components/layout/mobile-menu";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
+
+afterEach(() => cleanup());
 
 describe("Button", () => {
   it("announces and disables its loading state", () => {
@@ -76,6 +78,38 @@ describe("Progress", () => {
 });
 
 describe("MobileMenu", () => {
+  it("starts closed and toggles open and closed from the trigger", () => {
+    render(<MobileMenu />);
+
+    const trigger = screen.getByRole("button", { name: "Abrir menu" });
+    expect(trigger).toHaveAttribute("aria-expanded", "false");
+    expect(
+      screen.queryByRole("navigation", { name: "Navegação móvel" }),
+    ).not.toBeInTheDocument();
+
+    fireEvent.click(trigger);
+    const closeTrigger = screen.getByRole("button", { name: "Fechar menu" });
+    expect(closeTrigger).toHaveAttribute("aria-expanded", "true");
+    expect(
+      screen.getByRole("navigation", { name: "Navegação móvel" }),
+    ).toBeInTheDocument();
+    for (const label of [
+      "Soluções",
+      "Como trabalhamos",
+      "Case",
+      "Sobre",
+      "Diagnóstico gratuito",
+    ]) {
+      expect(screen.getByRole("link", { name: label })).toBeInTheDocument();
+    }
+
+    fireEvent.click(closeTrigger);
+    expect(screen.getByRole("button", { name: "Abrir menu" })).toHaveAttribute(
+      "aria-expanded",
+      "false",
+    );
+  });
+
   it("opens with focus on navigation and closes with Escape", () => {
     render(<MobileMenu />);
 
@@ -88,6 +122,21 @@ describe("MobileMenu", () => {
     fireEvent.keyDown(document, { key: "Escape" });
 
     expect(screen.getByRole("button", { name: "Abrir menu" })).toHaveFocus();
+    expect(
+      screen.queryByRole("navigation", { name: "Navegação móvel" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("closes when a navigation link is selected", () => {
+    render(<MobileMenu />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Abrir menu" }));
+    fireEvent.click(screen.getByRole("link", { name: "Soluções" }));
+
+    expect(screen.getByRole("button", { name: "Abrir menu" })).toHaveAttribute(
+      "aria-expanded",
+      "false",
+    );
     expect(
       screen.queryByRole("navigation", { name: "Navegação móvel" }),
     ).not.toBeInTheDocument();

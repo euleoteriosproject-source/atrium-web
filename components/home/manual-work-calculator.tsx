@@ -8,6 +8,7 @@ import {
   calculateMonthlyHours,
   formatApproximateHours,
 } from "@/lib/manual-work-calculator";
+import { buildDiagnosticHref } from "@/domain/diagnostic/preselection";
 
 export function ManualWorkCalculator() {
   const [people, setPeople] = useState(3);
@@ -19,6 +20,15 @@ export function ManualWorkCalculator() {
     daysPerWeek,
   });
   const formattedHours = formatApproximateHours(monthlyHours);
+  const diagnosticHref = buildDiagnosticHref({
+    goal: "AUTOMATION",
+    calculator: {
+      people,
+      minutesPerDay,
+      daysPerWeek,
+      estimatedMonthlyHours: monthlyHours,
+    },
+  });
 
   return (
     <div className="grid overflow-hidden rounded-card border border-navy-950/12 bg-white shadow-card lg:grid-cols-[0.9fr_1.1fr]">
@@ -82,7 +92,7 @@ export function ManualWorkCalculator() {
           manual.
         </p>
         <LinkButton
-          href="/diagnostico?goal=AUTOMATION"
+          href={diagnosticHref}
           variant="accent"
           className="mt-8 self-start"
         >

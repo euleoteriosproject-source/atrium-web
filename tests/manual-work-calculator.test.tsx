@@ -28,6 +28,14 @@ describe("manual-work calculator", () => {
     );
 
     expect(screen.getByText("65 horas/mês")).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: /analisar esse processo/i }),
+    ).toHaveAttribute(
+      "href",
+      expect.stringContaining(
+        "goal=AUTOMATION&people=6&minutesPerDay=30&daysPerWeek=5",
+      ),
+    );
   });
 
   it("does not produce negative effort", () => {
