@@ -16,6 +16,9 @@
 # TypeScript
 *.tsbuildinfo
 
+# Supabase CLI local state
+/supabase/.temp
+
 # logs and editor files
 *.log
 .DS_Store

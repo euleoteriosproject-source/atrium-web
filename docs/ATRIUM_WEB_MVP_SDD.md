@@ -2130,12 +2130,12 @@ Budget should be included only if user informed it and product owner chooses to 
 
 # 27. Lead data model
 
-## 27.1 Table `leads`
+## 27.1 Table `mvp_leads`
 
 Recommended PostgreSQL structure:
 
 ```sql
-create table public.leads (
+create table public.mvp_leads (
   id uuid primary key default gen_random_uuid(),
   public_code text not null unique,
   created_at timestamptz not null default now(),
@@ -2330,7 +2330,7 @@ Secrets stored in Supabase environment:
 
 Preferred V1 approach:
 
-- no direct browser writes to `leads`;
+- no direct browser writes to `mvp_leads`;
 - database table not exposed for anonymous insert;
 - Edge Function inserts with server-side credentials;
 - RLS enabled as defense-in-depth.
@@ -3486,4 +3486,3 @@ Next.js static frontend
 Business summary:
 
 > **Do not build the Atrium platform before the market proves which parts deserve to become platform.**
-

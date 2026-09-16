@@ -13,12 +13,13 @@ describe("public environment", () => {
         NEXT_PUBLIC_SITE_URL: "https://atrium.example",
         NEXT_PUBLIC_WHATSAPP_NUMBER: "+55 11 99999-9999",
         NEXT_PUBLIC_SUPABASE_URL: "https://project.supabase.co",
-        NEXT_PUBLIC_SUPABASE_ANON_KEY: "public-anon-key",
+        NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: "public-publishable-key",
         NEXT_PUBLIC_TURNSTILE_SITE_KEY: "public-site-key",
       }),
     ).toMatchObject({
       NEXT_PUBLIC_SITE_URL: "https://atrium.example",
       NEXT_PUBLIC_SUPABASE_URL: "https://project.supabase.co",
+      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: "public-publishable-key",
     });
   });
 

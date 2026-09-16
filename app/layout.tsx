@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Manrope, Source_Serif_4 } from "next/font/google";
 import type { ReactNode } from "react";
 
+import { AttributionCapture } from "@/components/lead/attribution-capture";
 import { publicEnv } from "@/lib/env";
 
 import "./globals.css";
@@ -37,6 +38,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="pt-BR">
       <body className={`${manrope.variable} ${sourceSerif.variable}`}>
+        <AttributionCapture />
         {children}
       </body>
     </html>

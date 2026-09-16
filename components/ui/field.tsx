@@ -44,6 +44,7 @@ export function FieldSupportingText({
   return (
     <p
       id={id}
+      role={error ? "alert" : undefined}
       className={cn("text-body-sm", error ? "text-danger" : "text-gray-text")}
     >
       {children}

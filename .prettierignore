@@ -4,3 +4,4 @@ docs
 node_modules
 out
 pnpm-lock.yaml
+supabase/.temp

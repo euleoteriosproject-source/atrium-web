@@ -285,6 +285,10 @@ const evidenceDefinitions: Record<EvidenceId, EvidenceDefinition> = {
   },
 };
 
+export const evidenceIds = Object.freeze(
+  Object.keys(evidenceDefinitions) as EvidenceId[],
+);
+
 export function collectEvidence(
   state: DiagnosticState,
   evidenceIds: readonly EvidenceId[],

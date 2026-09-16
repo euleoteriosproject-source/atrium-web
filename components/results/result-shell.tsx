@@ -166,7 +166,7 @@ export function ResultShell() {
             </div>
             <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
               <LinkButton href="/contato" variant="accent" size="lg">
-                Conversar sobre o diagnóstico
+                Quero conversar sobre isso
               </LinkButton>
               <LinkButton
                 href="/diagnostico"
