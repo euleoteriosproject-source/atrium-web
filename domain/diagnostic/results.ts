@@ -8,6 +8,7 @@ import {
   type Goal,
   type OpportunityDimension,
 } from "./types";
+import { editorialOpportunityDimensionLabels } from "@/supabase/functions/_shared/lead-editorial-labels";
 
 export type OpportunityLevel = "HIGH" | "MODERATE" | "LOW";
 
@@ -63,15 +64,7 @@ const goalDimension: Partial<Record<Goal, OpportunityDimension>> = {
 };
 
 export const opportunityDimensionLabels: Record<OpportunityDimension, string> =
-  {
-    digital: "Presença digital",
-    sales: "Vendas e conversão",
-    service: "Atendimento",
-    automation: "Automação",
-    integration: "Integração",
-    software: "Sistema sob medida",
-    ai: "IA aplicada",
-  };
+  editorialOpportunityDimensionLabels;
 
 export const opportunityLevelLabels: Record<OpportunityLevel, string> = {
   HIGH: "Oportunidade alta",

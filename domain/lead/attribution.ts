@@ -1,4 +1,5 @@
 import { attributionSchema, type Attribution } from "@/domain/lead/schema";
+import { leadFieldLimits } from "@/supabase/functions/_shared/lead-constraints";
 
 export const ATTRIBUTION_SESSION_KEY = "atrium:attribution:1.0.0";
 
@@ -6,14 +7,17 @@ type BrowserLocation = Pick<Location, "pathname" | "search">;
 
 function limited(value: string | null, maximum: number) {
   const normalized = value?.trim();
-  return normalized ? normalized.slice(0, maximum) : undefined;
+  return normalized && normalized.length <= maximum ? normalized : undefined;
 }
 
 function safeReferrer(value: string) {
   if (!value) return undefined;
   try {
     const url = new URL(value);
-    return `${url.origin}${url.pathname}`.slice(0, 500);
+    return limited(
+      `${url.origin}${url.pathname}`,
+      leadFieldLimits.attribution.referrer,
+    );
   } catch {
     return undefined;
   }
@@ -25,14 +29,32 @@ export function readAttribution(
 ): Attribution {
   const params = new URLSearchParams(location.search);
   return attributionSchema.parse({
-    source: limited(params.get("source"), 100),
-    utmSource: limited(params.get("utm_source"), 200),
-    utmMedium: limited(params.get("utm_medium"), 200),
-    utmCampaign: limited(params.get("utm_campaign"), 200),
-    utmContent: limited(params.get("utm_content"), 200),
-    utmTerm: limited(params.get("utm_term"), 200),
+    source: limited(params.get("source"), leadFieldLimits.attribution.source),
+    utmSource: limited(
+      params.get("utm_source"),
+      leadFieldLimits.attribution.utmSource,
+    ),
+    utmMedium: limited(
+      params.get("utm_medium"),
+      leadFieldLimits.attribution.utmMedium,
+    ),
+    utmCampaign: limited(
+      params.get("utm_campaign"),
+      leadFieldLimits.attribution.utmCampaign,
+    ),
+    utmContent: limited(
+      params.get("utm_content"),
+      leadFieldLimits.attribution.utmContent,
+    ),
+    utmTerm: limited(
+      params.get("utm_term"),
+      leadFieldLimits.attribution.utmTerm,
+    ),
     referrer: safeReferrer(referrer),
-    landingPage: limited(location.pathname, 500),
+    landingPage: limited(
+      location.pathname,
+      leadFieldLimits.attribution.landingPage,
+    ),
   });
 }
 

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
-import { leadFormSchema, normalizePhone } from "@/domain/lead/schema";
+import { leadFormSchema } from "@/domain/lead/schema";
+import { normalizeBrazilPhone } from "@/supabase/functions/_shared/brazil-phone";
 
 const validForm = {
   contactName: "  Ana Silva  ",
@@ -18,7 +19,7 @@ describe("lead form schema", () => {
     expect(leadFormSchema.parse(validForm)).toMatchObject({
       contactName: "Ana Silva",
       companyName: "Empresa Exemplo",
-      phone: "+5511999999999",
+      phone: "5511999999999",
       email: null,
     });
   });
@@ -59,6 +60,72 @@ describe("lead form schema", () => {
   });
 
   it("normalizes common phone formatting without checking account existence", () => {
-    expect(normalizePhone("(11) 98888-7777")).toBe("11988887777");
+    expect(normalizeBrazilPhone("(11) 98888-7777")).toBe("5511988887777");
+  });
+
+  it("enforces the name and company boundaries after trimming", () => {
+    expect(
+      leadFormSchema.safeParse({ ...validForm, contactName: "A " }).success,
+    ).toBe(false);
+    expect(
+      leadFormSchema.safeParse({ ...validForm, contactName: "AB" }).success,
+    ).toBe(true);
+    expect(
+      leadFormSchema.safeParse({
+        ...validForm,
+        contactName: "A".repeat(80),
+      }).success,
+    ).toBe(true);
+    expect(
+      leadFormSchema.safeParse({
+        ...validForm,
+        contactName: "A".repeat(81),
+      }).success,
+    ).toBe(false);
+    expect(
+      leadFormSchema.safeParse({ ...validForm, companyName: "A" }).success,
+    ).toBe(false);
+    expect(
+      leadFormSchema.safeParse({ ...validForm, companyName: "AB" }).success,
+    ).toBe(true);
+    expect(
+      leadFormSchema.safeParse({
+        ...validForm,
+        companyName: "A".repeat(120),
+      }).success,
+    ).toBe(true);
+    expect(
+      leadFormSchema.safeParse({
+        ...validForm,
+        companyName: "A".repeat(121),
+      }).success,
+    ).toBe(false);
+  });
+
+  it("preserves legitimate punctuation in names", () => {
+    expect(
+      leadFormSchema.parse({
+        ...validForm,
+        contactName: "  D'Ávila-Souza  ",
+        companyName: "  A&B Serviços, Ltda.  ",
+      }),
+    ).toMatchObject({
+      contactName: "D'Ávila-Souza",
+      companyName: "A&B Serviços, Ltda.",
+    });
+  });
+
+  it("accepts a valid 254-character email and rejects 255 characters", () => {
+    const domain = `${"b".repeat(63)}.${"c".repeat(63)}.${"d".repeat(57)}.com`;
+    const email254 = `${"a".repeat(64)}@${domain}`;
+    const email255 = `${"a".repeat(65)}@${domain}`;
+    expect(email254).toHaveLength(254);
+    expect(email255).toHaveLength(255);
+    expect(
+      leadFormSchema.safeParse({ ...validForm, email: email254 }).success,
+    ).toBe(true);
+    expect(
+      leadFormSchema.safeParse({ ...validForm, email: email255 }).success,
+    ).toBe(false);
   });
 });

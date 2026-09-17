@@ -135,6 +135,103 @@ describe("M5 lead UI", () => {
     ).toHaveAttribute("href", "/privacidade");
   });
 
+  it("exposes mobile-friendly attributes and explicit field limits", async () => {
+    saveDiagnosticSession(completedDiagnostic());
+    render(<ContactShell />);
+    const name = await screen.findByLabelText(/^Seu nome/);
+    const company = screen.getByLabelText(/^Empresa ou negócio/);
+    const phone = screen.getByLabelText(/^WhatsApp/);
+    const email = screen.getByLabelText(/^E-mail/);
+
+    expect(name).toHaveAttribute("maxlength", "80");
+    expect(company).toHaveAttribute("maxlength", "120");
+    expect(email).toHaveAttribute("maxlength", "254");
+    expect(phone).toHaveAttribute("type", "tel");
+    expect(phone).toHaveAttribute("inputmode", "tel");
+    expect(phone).toHaveAttribute("autocomplete", "tel");
+    expect(phone).toHaveAttribute("maxlength", "19");
+    expect(phone).toHaveAccessibleDescription(
+      /O \+55 e a formatação são aplicados automaticamente/i,
+    );
+  });
+
+  it("formats progressive typing and paste with or without +55", async () => {
+    saveDiagnosticSession(completedDiagnostic());
+    render(<ContactShell />);
+    const phone = (await screen.findByLabelText(
+      /^WhatsApp/,
+    )) as HTMLInputElement;
+
+    fireEvent.change(phone, { target: { value: "5", selectionStart: 1 } });
+    expect(phone).toHaveValue("+55 (5");
+    fireEvent.change(phone, {
+      target: { value: "51982895068", selectionStart: 11 },
+    });
+    expect(phone).toHaveValue("+55 (51) 98289-5068");
+
+    fireEvent.change(phone, {
+      target: { value: "+55 51 98289-5068", selectionStart: 18 },
+    });
+    expect(phone).toHaveValue("+55 (51) 98289-5068");
+  });
+
+  it("keeps backspace and middle editing usable and prevents excess digits", async () => {
+    saveDiagnosticSession(completedDiagnostic());
+    render(<ContactShell />);
+    const phone = (await screen.findByLabelText(
+      /^WhatsApp/,
+    )) as HTMLInputElement;
+
+    fireEvent.change(phone, {
+      target: { value: "51982895068", selectionStart: 11 },
+    });
+    fireEvent.change(phone, {
+      target: { value: "+55 (51) 98289-506", selectionStart: 18 },
+    });
+    expect(phone).toHaveValue("+55 (51) 9828-9506");
+
+    fireEvent.change(phone, {
+      target: { value: "+55 (51) 9728-9506", selectionStart: 11 },
+    });
+    expect(phone).toHaveValue("+55 (51) 9728-9506");
+    await waitFor(() =>
+      expect(phone.selectionStart).toBeLessThan(phone.value.length),
+    );
+
+    const accepted = phone.value;
+    fireEvent.change(phone, {
+      target: { value: "+55 (51) 99728-95069", selectionStart: 20 },
+    });
+    expect(phone).toHaveValue(accepted);
+  });
+
+  it("keeps invalid field values visible with accessible messages", async () => {
+    saveDiagnosticSession(completedDiagnostic());
+    render(<ContactShell />);
+    const name = await screen.findByLabelText(/^Seu nome/);
+    const company = screen.getByLabelText(/^Empresa ou negócio/);
+    const phone = screen.getByLabelText(/^WhatsApp/);
+    const consent = screen.getByLabelText(
+      /Concordo em enviar meu diagnóstico/i,
+    );
+
+    fireEvent.change(name, { target: { value: "A" } });
+    fireEvent.change(company, { target: { value: "Empresa Exemplo" } });
+    fireEvent.change(phone, { target: { value: "51982" } });
+    fireEvent.click(consent);
+    fireEvent.click(
+      screen.getByRole("button", { name: /Continuar para o WhatsApp/i }),
+    );
+
+    expect(await screen.findByText(/pelo menos 2 caracteres/i)).toBeVisible();
+    expect(screen.getByText("Informe um WhatsApp com DDD.")).toBeVisible();
+    expect(name).toHaveValue("A");
+    expect(phone).toHaveValue("+55 (51) 982");
+    expect(name).toHaveAttribute("aria-invalid", "true");
+    expect(phone).toHaveAttribute("aria-invalid", "true");
+    expect(mocks.createLead).not.toHaveBeenCalled();
+  });
+
   it("submits once, exposes loading state and stores only the minimal handoff", async () => {
     saveDiagnosticSession(completedDiagnostic());
     let resolveRequest: ((value: unknown) => void) | undefined;

@@ -1,21 +1,17 @@
 import type { Goal, QuestionDefinition, QuestionOption } from "./types";
+import {
+  businessSegmentOptions,
+  companySizeOptions,
+  primaryGoalOptions,
+} from "@/supabase/functions/_shared/lead-editorial-labels";
 
 const option = (value: string, label: string): QuestionOption => ({
   value,
   label,
 });
 
-export const goalOptions = [
-  option("SALES", "Atrair mais clientes"),
-  option("CONVERSION", "Converter mais oportunidades em vendas"),
-  option("AUTOMATION", "Reduzir trabalho manual"),
-  option("SERVICE", "Melhorar atendimento"),
-  option("WEBSITE", "Criar ou melhorar meu site"),
-  option("SOFTWARE", "Criar um sistema"),
-  option("INTEGRATION", "Integrar ferramentas"),
-  option("AI", "Usar inteligência artificial"),
-  option("DISCOVERY", "Quero descobrir oportunidades"),
-] as const satisfies readonly QuestionOption[];
+export const goalOptions =
+  primaryGoalOptions satisfies readonly QuestionOption[];
 
 export const universalQuestions = [
   {
@@ -31,33 +27,14 @@ export const universalQuestions = [
     id: "Q002",
     kind: "single",
     title: "Qual é o tipo do seu negócio?",
-    options: [
-      option("SERVICES", "Serviços"),
-      option("REAL_ESTATE", "Imobiliário"),
-      option("FINANCE", "Financeiro / Crédito"),
-      option("EDUCATION", "Educação"),
-      option("HEALTH", "Saúde"),
-      option("COMMERCE", "Comércio"),
-      option("INDUSTRY", "Indústria"),
-      option("TECHNOLOGY", "Tecnologia"),
-      option("INDEPENDENT", "Profissional liberal"),
-      option("CONSTRUCTION", "Construção / Engenharia"),
-      option("LOGISTICS", "Logística"),
-      option("OTHER", "Outro"),
-    ],
+    options: businessSegmentOptions,
     otherOptionValue: "OTHER",
   },
   {
     id: "Q003",
     kind: "single",
     title: "Quantas pessoas trabalham na operação?",
-    options: [
-      option("ONE", "1"),
-      option("TWO_TO_FIVE", "2–5"),
-      option("SIX_TO_TWENTY", "6–20"),
-      option("TWENTY_ONE_TO_FIFTY", "21–50"),
-      option("FIFTY_ONE_PLUS", "51+"),
-    ],
+    options: companySizeOptions,
   },
   {
     id: "Q004",

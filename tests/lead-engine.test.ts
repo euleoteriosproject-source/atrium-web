@@ -97,9 +97,115 @@ describe("Edge lead engine", () => {
     const parsed = validateLeadPayload(payload());
     expect(parsed.success).toBe(true);
     if (parsed.success) {
-      expect(parsed.data.contact.phone).toBe("+5511999999999");
+      expect(parsed.data.contact.phone).toBe("5511999999999");
       expect(parsed.data.diagnostic).not.toHaveProperty("opportunityScores");
     }
+  });
+
+  it.each([
+    ["(51) 98289-5068", "5551982895068"],
+    ["51982895068", "5551982895068"],
+    ["+55 51 98289-5068", "5551982895068"],
+    ["5133334444", "555133334444"],
+  ])("normalizes a raw server phone %s", (phone, canonical) => {
+    const parsed = validateLeadPayload({
+      ...payload(),
+      contact: { ...payload().contact, phone },
+    });
+    expect(parsed.success).toBe(true);
+    if (parsed.success) expect(parsed.data.contact.phone).toBe(canonical);
+  });
+
+  it.each(["123456789", "519828950680", "+1 (212) 555-0100", "abc51982895068"])(
+    "rejects a bypassed invalid phone %s",
+    (phone) => {
+      expect(
+        validateLeadPayload({
+          ...payload(),
+          contact: { ...payload().contact, phone },
+        }).success,
+      ).toBe(false);
+    },
+  );
+
+  it("enforces contact boundaries on the server", () => {
+    const domain = `${"b".repeat(63)}.${"c".repeat(63)}.${"d".repeat(57)}.com`;
+    const validEmail = `${"a".repeat(64)}@${domain}`;
+    const valid = payload();
+    expect(
+      validateLeadPayload({
+        ...valid,
+        contact: {
+          ...valid.contact,
+          contactName: "AB",
+          companyName: "CD",
+        },
+      }).success,
+    ).toBe(true);
+    expect(
+      validateLeadPayload({
+        ...valid,
+        contact: { ...valid.contact, contactName: "A " },
+      }).success,
+    ).toBe(false);
+    expect(
+      validateLeadPayload({
+        ...valid,
+        contact: {
+          ...valid.contact,
+          contactName: "A".repeat(80),
+          companyName: "B".repeat(120),
+          email: validEmail,
+        },
+      }).success,
+    ).toBe(true);
+    expect(
+      validateLeadPayload({
+        ...valid,
+        contact: { ...valid.contact, contactName: "A".repeat(81) },
+      }).success,
+    ).toBe(false);
+    expect(
+      validateLeadPayload({
+        ...valid,
+        contact: { ...valid.contact, companyName: "B".repeat(121) },
+      }).success,
+    ).toBe(false);
+    expect(
+      validateLeadPayload({
+        ...valid,
+        contact: { ...valid.contact, email: `a${validEmail}` },
+      }).success,
+    ).toBe(false);
+    expect(
+      validateLeadPayload({
+        ...valid,
+        contact: { ...valid.contact, email: "ana@example" },
+      }).success,
+    ).toBe(false);
+  });
+
+  it("discards oversized attribution fields without blocking the lead", () => {
+    const parsed = validateLeadPayload({
+      ...payload(),
+      attribution: {
+        source: "website",
+        utmSource: "x".repeat(201),
+        utmCampaign: 123,
+      },
+    });
+    expect(parsed.success).toBe(true);
+    if (!parsed.success) return;
+    expect(parsed.data.attribution).toEqual({
+      source: "website",
+      utmSource: undefined,
+      utmMedium: undefined,
+      utmCampaign: undefined,
+      utmContent: undefined,
+      utmTerm: undefined,
+      referrer: undefined,
+      landingPage: undefined,
+    });
   });
 
   it("rejects malformed, non-consented and honeypot payloads", () => {
@@ -486,6 +592,70 @@ describe("Edge lead engine", () => {
     expect(migration).not.toMatch(
       /grant\s+(?:select|insert|update|delete|all)[^;]*\bto\s+(?:anon|authenticated)\b/i,
     );
+  });
+
+  it("adds and validates the four M5.1 constraints without rewriting data or the historical migration", () => {
+    const migration = readFileSync(
+      resolve(
+        "supabase/migrations/202609160001_harden_mvp_lead_contact_fields.sql",
+      ),
+      "utf8",
+    );
+    const historicalMigration = readFileSync(
+      resolve("supabase/migrations/202609110001_create_leads.sql"),
+      "utf8",
+    );
+    const constraintNames = [
+      "mvp_leads_contact_name_m51_check",
+      "mvp_leads_company_name_m51_check",
+      "mvp_leads_phone_m51_check",
+      "mvp_leads_email_m51_check",
+    ];
+
+    expect(migration).toMatch(/alter table public\.mvp_leads/i);
+    expect(migration).toMatch(
+      /char_length\(trim\(contact_name\)\) between 2 and 80/i,
+    );
+    expect(migration).toMatch(
+      /char_length\(trim\(company_name\)\) between 2 and 120/i,
+    );
+    expect(migration).toMatch(/phone ~ '\^55\[0-9\]\{10,11\}\$'/i);
+    expect(migration).toMatch(/char_length\(email\) <= 254/i);
+    expect(migration.match(/\badd constraint\b/gi)).toHaveLength(4);
+    expect(migration.match(/\)\s+not valid[;,]/gi)).toHaveLength(4);
+    expect(migration.match(/\bvalidate constraint\b/gi)).toHaveLength(4);
+
+    for (const constraintName of constraintNames) {
+      const addConstraint = new RegExp(
+        `add constraint ${constraintName}\\s+check \\(.*?\\) not valid[;,]`,
+        "is",
+      );
+      const validateConstraint = new RegExp(
+        `alter table public\\.mvp_leads\\s+validate constraint ${constraintName};`,
+        "i",
+      );
+      expect(migration).toMatch(addConstraint);
+      expect(migration).toMatch(validateConstraint);
+      expect(migration.search(validateConstraint)).toBeGreaterThan(
+        migration.search(addConstraint),
+      );
+    }
+
+    expect(migration).not.toMatch(/^\s*(?:update|delete|insert)\b/gim);
+    expect(migration).not.toMatch(/create table/i);
+    expect(migration).not.toMatch(/public\.leads\b/i);
+    expect(migration).not.toMatch(/\b(?:rename\s+to|set\s+schema)\b/i);
+    expect(migration).toMatch(/select public_code,/i);
+    expect(migration).toMatch(/as incompatible_fields/i);
+    expect(migration.match(/drop constraint if exists/gi)).toHaveLength(4);
+
+    expect(historicalMigration).toMatch(
+      /contact_name text not null check \(char_length\(contact_name\) between 2 and 100\)/i,
+    );
+    expect(historicalMigration).toMatch(
+      /phone text not null check \(char_length\(phone\) between 10 and 32\)/i,
+    );
+    expect(historicalMigration).not.toMatch(/m51_check/i);
   });
 
   it("defines only the three operational secondary indexes", () => {

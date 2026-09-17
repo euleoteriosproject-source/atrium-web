@@ -34,6 +34,12 @@ import {
 } from "@/domain/lead/session";
 import { publicEnv } from "@/lib/env";
 import { loadDiagnosticSession } from "@/lib/session";
+import {
+  caretPositionForNationalDigits,
+  countNationalDigitsBeforeCaret,
+  formatBrazilPhone,
+} from "@/supabase/functions/_shared/brazil-phone";
+import { leadFieldLimits } from "@/supabase/functions/_shared/lead-constraints";
 
 import { TurnstileWidget } from "./turnstile-widget";
 
@@ -66,6 +72,7 @@ export function ContactShell() {
   const router = useRouter();
   const headingRef = useRef<HTMLHeadingElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
+  const phoneInputRef = useRef<HTMLInputElement>(null);
   const submissionIdRef = useRef("");
   const [diagnostic, setDiagnostic] = useState<LoadedDiagnostic>(undefined);
   const [values, setValues] = useState<LeadFormValues>(initialValues);
@@ -145,6 +152,30 @@ export function ContactShell() {
   ) => {
     setValues((current) => ({ ...current, [key]: value }));
     setErrors((current) => ({ ...current, [key]: undefined }));
+  };
+
+  const updatePhone = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const rawValue = event.currentTarget.value;
+    const caret = event.currentTarget.selectionStart ?? rawValue.length;
+    const nationalDigitsBeforeCaret = countNationalDigitsBeforeCaret(
+      rawValue,
+      caret,
+    );
+    const formatted = formatBrazilPhone(rawValue);
+
+    if (formatted === undefined) {
+      setValues((current) => ({ ...current }));
+      return;
+    }
+
+    update("phone", formatted);
+    const nextCaret = caretPositionForNationalDigits(
+      formatted,
+      nationalDigitsBeforeCaret,
+    );
+    window.requestAnimationFrame(() => {
+      phoneInputRef.current?.setSelectionRange(nextCaret, nextCaret);
+    });
   };
 
   const continueToHandoff = (input: {
@@ -293,6 +324,7 @@ export function ContactShell() {
               <Input
                 label="Seu nome"
                 autoComplete="name"
+                maxLength={leadFieldLimits.contactName.maximum}
                 required
                 value={values.contactName}
                 error={errors.contactName}
@@ -301,27 +333,32 @@ export function ContactShell() {
               <Input
                 label="Empresa ou negócio"
                 autoComplete="organization"
+                maxLength={leadFieldLimits.companyName.maximum}
                 required
                 value={values.companyName}
                 error={errors.companyName}
                 onChange={(event) => update("companyName", event.target.value)}
               />
               <Input
+                ref={phoneInputRef}
                 label="WhatsApp"
                 type="tel"
                 inputMode="tel"
                 autoComplete="tel"
-                placeholder="(11) 99999-9999"
+                maxLength={leadFieldLimits.phone.inputMaximum}
+                placeholder="+55 (51) 98289-5068"
+                description="Digite DDD e número. O +55 e a formatação são aplicados automaticamente."
                 required
                 value={values.phone}
                 error={errors.phone}
-                onChange={(event) => update("phone", event.target.value)}
+                onChange={updatePhone}
               />
               <Input
                 label="E-mail"
                 type="email"
                 inputMode="email"
                 autoComplete="email"
+                maxLength={leadFieldLimits.email.maximum}
                 description="Opcional"
                 value={values.email}
                 error={errors.email}
@@ -376,6 +413,7 @@ export function ContactShell() {
                   name="website"
                   tabIndex={-1}
                   autoComplete="off"
+                  maxLength={leadFieldLimits.honeypot.maximum}
                   value={values.website}
                   onChange={(event) => update("website", event.target.value)}
                 />

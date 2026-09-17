@@ -1,3 +1,14 @@
+import { normalizeBrazilPhone } from "./brazil-phone.ts";
+import {
+  budgetRangeValues,
+  isAllowedValue,
+  leadEmailPattern,
+  leadFieldLimits,
+  timeframeValues,
+  type BudgetRangeValue,
+  type TimeframeValue,
+} from "./lead-constraints.ts";
+
 export const DIAGNOSTIC_VERSION = "1.0.0";
 
 export const opportunityDimensions = [
@@ -22,26 +33,10 @@ export const goals = [
   "DISCOVERY",
 ] as const;
 
-export const timeframeValues = [
-  "NOW",
-  "ONE_TO_THREE_MONTHS",
-  "THREE_TO_SIX_MONTHS",
-  "EXPLORING",
-] as const;
-
-export const budgetRangeValues = [
-  "UNDERSTANDING",
-  "UP_TO_3000",
-  "FROM_3000_TO_7500",
-  "FROM_7500_TO_15000",
-  "FROM_15000_TO_30000",
-  "ABOVE_30000",
-] as const;
-
 type OpportunityDimension = (typeof opportunityDimensions)[number];
 type Goal = (typeof goals)[number];
-type Timeframe = (typeof timeframeValues)[number];
-type BudgetRange = (typeof budgetRangeValues)[number];
+type Timeframe = TimeframeValue;
+type BudgetRange = BudgetRangeValue;
 type Answer = string | string[] | number;
 export type Scores = Record<OpportunityDimension, number>;
 
@@ -107,12 +102,6 @@ export type LeadScore = {
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
 
-const isEnum = <Value extends string>(
-  value: unknown,
-  values: readonly Value[],
-): value is Value =>
-  typeof value === "string" && values.includes(value as Value);
-
 function cleanString(value: unknown, min: number, max: number) {
   if (typeof value !== "string") return undefined;
   const normalized = value.trim();
@@ -127,17 +116,19 @@ function optionalString(value: unknown, max: number) {
 }
 
 function normalizePhone(value: unknown) {
-  if (typeof value !== "string" || value.length > 32) return undefined;
-  const trimmed = value.trim();
-  const digits = trimmed.replace(/\D/g, "");
-  if (digits.length < 10 || digits.length > 15) return undefined;
-  return `${trimmed.startsWith("+") ? "+" : ""}${digits}`;
+  if (
+    typeof value !== "string" ||
+    value.length > leadFieldLimits.phone.serverInputMaximum
+  ) {
+    return undefined;
+  }
+  return normalizeBrazilPhone(value);
 }
 
 function validEmail(value: unknown) {
   if (value === null || value === undefined || value === "") return null;
-  const email = cleanString(value, 3, 254);
-  return email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? email : undefined;
+  const email = cleanString(value, 3, leadFieldLimits.email.maximum);
+  return email && leadEmailPattern.test(email) ? email : undefined;
 }
 
 function validAnswer(value: unknown): value is Answer {
@@ -169,10 +160,10 @@ function parseDiagnostic(value: unknown): DiagnosticPayload | undefined {
   if (
     value.version !== DIAGNOSTIC_VERSION ||
     value.stage !== "complete" ||
-    !isEnum(value.primaryGoal, goals) ||
+    !isAllowedValue(value.primaryGoal, goals) ||
     !cleanString(value.startedAt, 1, 64) ||
     !validStringArray(value.additionalGoals, goals.length) ||
-    !value.additionalGoals.every((goal) => isEnum(goal, goals)) ||
+    !value.additionalGoals.every((goal) => isAllowedValue(goal, goals)) ||
     !validStringArray(value.acquisitionChannels) ||
     !validStringArray(value.tools) ||
     !isRecord(value.answers) ||
@@ -221,27 +212,44 @@ export function validateLeadPayload(
   input: unknown,
 ): { success: true; data: ValidatedLeadPayload } | { success: false } {
   if (!isRecord(input) || !isRecord(input.contact)) return { success: false };
-  if (input.website !== "") return { success: false };
+  if (
+    typeof input.website !== "string" ||
+    input.website.length > leadFieldLimits.honeypot.maximum
+  ) {
+    return { success: false };
+  }
 
   const submissionId = cleanString(input.submissionId, 36, 36);
-  const contactName = cleanString(input.contact.contactName, 2, 100);
-  const companyName = cleanString(input.contact.companyName, 2, 120);
+  const contactName = cleanString(
+    input.contact.contactName,
+    leadFieldLimits.contactName.minimum,
+    leadFieldLimits.contactName.maximum,
+  );
+  const companyName = cleanString(
+    input.contact.companyName,
+    leadFieldLimits.companyName.minimum,
+    leadFieldLimits.companyName.maximum,
+  );
   const phone = normalizePhone(input.contact.phone);
   const email = validEmail(input.contact.email);
   const timeframe =
     input.contact.timeframe === null
       ? null
-      : isEnum(input.contact.timeframe, timeframeValues)
+      : isAllowedValue(input.contact.timeframe, timeframeValues)
         ? input.contact.timeframe
         : undefined;
   const budgetRange =
     input.contact.budgetRange === null
       ? null
-      : isEnum(input.contact.budgetRange, budgetRangeValues)
+      : isAllowedValue(input.contact.budgetRange, budgetRangeValues)
         ? input.contact.budgetRange
         : undefined;
   const diagnostic = parseDiagnostic(input.diagnostic);
-  const turnstileToken = cleanString(input.turnstileToken, 1, 2048);
+  const turnstileToken = cleanString(
+    input.turnstileToken,
+    1,
+    leadFieldLimits.turnstileToken.maximum,
+  );
 
   if (
     !submissionId ||
@@ -263,14 +271,38 @@ export function validateLeadPayload(
 
   const attribution = isRecord(input.attribution)
     ? {
-        source: optionalString(input.attribution.source, 100),
-        utmSource: optionalString(input.attribution.utmSource, 200),
-        utmMedium: optionalString(input.attribution.utmMedium, 200),
-        utmCampaign: optionalString(input.attribution.utmCampaign, 200),
-        utmContent: optionalString(input.attribution.utmContent, 200),
-        utmTerm: optionalString(input.attribution.utmTerm, 200),
-        referrer: optionalString(input.attribution.referrer, 500),
-        landingPage: optionalString(input.attribution.landingPage, 500),
+        source: optionalString(
+          input.attribution.source,
+          leadFieldLimits.attribution.source,
+        ),
+        utmSource: optionalString(
+          input.attribution.utmSource,
+          leadFieldLimits.attribution.utmSource,
+        ),
+        utmMedium: optionalString(
+          input.attribution.utmMedium,
+          leadFieldLimits.attribution.utmMedium,
+        ),
+        utmCampaign: optionalString(
+          input.attribution.utmCampaign,
+          leadFieldLimits.attribution.utmCampaign,
+        ),
+        utmContent: optionalString(
+          input.attribution.utmContent,
+          leadFieldLimits.attribution.utmContent,
+        ),
+        utmTerm: optionalString(
+          input.attribution.utmTerm,
+          leadFieldLimits.attribution.utmTerm,
+        ),
+        referrer: optionalString(
+          input.attribution.referrer,
+          leadFieldLimits.attribution.referrer,
+        ),
+        landingPage: optionalString(
+          input.attribution.landingPage,
+          leadFieldLimits.attribution.landingPage,
+        ),
       }
     : undefined;
 

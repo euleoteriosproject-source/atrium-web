@@ -35,6 +35,18 @@ describe("session attribution", () => {
     });
   });
 
+  it("discards oversized attribution values instead of truncating or blocking", () => {
+    expect(
+      readAttribution({
+        pathname: "/diagnostico",
+        search: `?utm_source=${"x".repeat(201)}&utm_medium=social`,
+      }),
+    ).toEqual({
+      utmMedium: "social",
+      landingPage: "/diagnostico",
+    });
+  });
+
   it("preserves the first attribution across internal navigation", () => {
     const first = captureInitialAttribution(
       { pathname: "/", search: "?utm_source=google" },
