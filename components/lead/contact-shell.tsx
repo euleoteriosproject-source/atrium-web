@@ -68,6 +68,17 @@ const initialValues: LeadFormValues = {
   website: "",
 };
 
+const contactEntryOptions = [
+  ["Tenho uma ideia", "/diagnostico?goal=DISCOVERY"],
+  ["Tenho um problema", "/diagnostico?goal=DISCOVERY"],
+  ["Preciso de um site", "/diagnostico?goal=WEBSITE"],
+  ["Preciso de um sistema", "/diagnostico?goal=SOFTWARE"],
+  ["Quero automatizar algo", "/diagnostico?goal=AUTOMATION"],
+  ["Quero integrar ferramentas", "/diagnostico?goal=INTEGRATION"],
+  ["Quero avaliar IA", "/diagnostico?goal=AI"],
+  ["Ainda não sei exatamente", "/diagnostico?goal=DISCOVERY"],
+] as const;
+
 export function ContactShell() {
   const router = useRouter();
   const headingRef = useRef<HTMLHeadingElement>(null);
@@ -124,22 +135,49 @@ export function ContactShell() {
     return (
       <main id="conteudo" className="min-h-[65vh] bg-offwhite text-navy-950">
         <Container className="py-16 sm:py-24 lg:py-28">
-          <div className="max-w-3xl">
-            <Eyebrow>Antes de conversar</Eyebrow>
+          <div className="max-w-4xl">
+            <Eyebrow>Contato</Eyebrow>
             <h1
               ref={headingRef}
               tabIndex={-1}
               className="mt-5 text-h1 font-semibold focus-visible:outline-none focus-visible:shadow-none"
             >
-              Primeiro, vamos entender sua operação.
+              Vamos conversar sobre o que você quer melhorar.
             </h1>
             <p className="mt-6 max-w-2xl text-body-lg text-gray-text">
-              Não encontramos um diagnóstico concluído nesta sessão. Complete as
-              perguntas para receber valor antes de enviar seus dados.
+              Escolha o ponto que mais se aproxima do seu cenário. O diagnóstico
+              organiza o contexto antes do contato, sem exigir que você já saiba
+              qual tecnologia precisa.
             </p>
-            <LinkButton href="/diagnostico" size="lg" className="mt-9">
-              Fazer diagnóstico
-            </LinkButton>
+            <nav aria-label="Escolha o motivo do contato" className="mt-10">
+              <ul className="grid border-t border-l border-navy-950/12 sm:grid-cols-2">
+                {contactEntryOptions.map(([label, href]) => (
+                  <li
+                    key={label}
+                    className="border-r border-b border-navy-950/12"
+                  >
+                    <Link
+                      href={href}
+                      className="motion-interactive flex min-h-20 items-center justify-between gap-4 p-5 font-semibold transition-colors hover:bg-gray-bg sm:p-6"
+                    >
+                      {label}
+                      <span aria-hidden="true" className="text-gold-500">
+                        →
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+            <div className="mt-9 flex flex-col gap-4 sm:flex-row sm:items-center">
+              <LinkButton href="/diagnostico" size="lg">
+                Diagnóstico gratuito
+              </LinkButton>
+              <p className="max-w-md text-body-sm text-gray-text">
+                Você verá o resultado antes de decidir enviar seus dados para a
+                Atrium.
+              </p>
+            </div>
           </div>
         </Container>
       </main>

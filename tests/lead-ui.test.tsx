@@ -109,16 +109,22 @@ describe("M5 lead UI", () => {
     vi.restoreAllMocks();
   });
 
-  it("shows an honest state when the diagnostic session is absent", async () => {
+  it("offers preselected diagnostic paths when the session is absent", async () => {
     render(<ContactShell />);
     expect(
       await screen.findByRole("heading", {
-        name: /Primeiro, vamos entender sua operação/i,
+        name: /Vamos conversar sobre o que você quer melhorar/i,
       }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: "Fazer diagnóstico" }),
+      screen.getByRole("link", { name: "Diagnóstico gratuito" }),
     ).toHaveAttribute("href", "/diagnostico");
+    expect(
+      screen.getByRole("link", { name: /Preciso de um site/i }),
+    ).toHaveAttribute("href", "/diagnostico?goal=WEBSITE");
+    expect(
+      screen.getByRole("link", { name: /Quero integrar ferramentas/i }),
+    ).toHaveAttribute("href", "/diagnostico?goal=INTEGRATION");
   });
 
   it("validates required fields before calling the Edge Function", async () => {
