@@ -1,7 +1,11 @@
 import { describe, expect, it, vi } from "vitest";
 
 import { createDiagnosticState } from "@/domain/diagnostic/types";
-import { createLead, LeadSubmissionError } from "@/domain/lead/client";
+import {
+  createLead,
+  LeadSubmissionError,
+  trackLeadHandoff,
+} from "@/domain/lead/client";
 import { leadSubmissionSchema } from "@/domain/lead/schema";
 
 function submission() {
@@ -80,5 +84,42 @@ describe("lead API client", () => {
         malformedResponse,
       ),
     ).rejects.toBeInstanceOf(LeadSubmissionError);
+  });
+
+  it("tracks handoff with keepalive and degrades to false", async () => {
+    const fetcher = vi
+      .fn<typeof fetch>()
+      .mockResolvedValue(Response.json({ success: true }));
+    await expect(
+      trackLeadHandoff(
+        {
+          submissionId: "123e4567-e89b-42d3-a456-426614174000",
+          publicCode: "AT-26-ABC123",
+        },
+        {
+          supabaseUrl: "https://project.supabase.co/",
+          publishableKey: "publishable-key",
+        },
+        fetcher,
+      ),
+    ).resolves.toBe(true);
+    expect(fetcher.mock.calls[0]?.[1]).toMatchObject({
+      method: "POST",
+      keepalive: true,
+    });
+    expect(new Headers(fetcher.mock.calls[0]?.[1]?.headers).get("apikey")).toBe(
+      "publishable-key",
+    );
+
+    await expect(
+      trackLeadHandoff(
+        {
+          submissionId: "123e4567-e89b-42d3-a456-426614174000",
+          publicCode: "AT-26-ABC123",
+        },
+        { supabaseUrl: "https://project.supabase.co" },
+        vi.fn<typeof fetch>().mockRejectedValue(new Error("offline")),
+      ),
+    ).resolves.toBe(false);
   });
 });

@@ -1,11 +1,13 @@
 # ATRIUM WEB MVP — Software Design & Product Specification
 
 **Document:** `ATRIUM_WEB_MVP_SDD.md`  
-**Version:** 1.2  
+**Version:** 1.3
 **Status:** Product scope frozen for MVP implementation  
 **Language:** pt-BR  
 **Primary implementation target:** Codex in VSCode  
 **Last consolidated:** 2026-09-16
+
+**Normative consolidation:** incorporates `ATRIUM_WEB_MVP_SDD_v1.3_M6B2_ADDENDUM.md`. For M6B.2, WhatsApp handoff semantics and lead operations, the v1.3 wording supersedes earlier wording without removing unaffected v1.2 decisions.
 
 ---
 
@@ -437,6 +439,14 @@ No animation should delay conversion or content comprehension.
 ```
 
 `/diagnostico/resultado` and `/contato/whatsapp` must be `noindex`.
+
+Internal Admin routes, also `noindex, nofollow`:
+
+```text
+/admin/login
+/admin
+/admin/lead?publicCode=AT-YY-XXXXXX
+```
 
 ---
 
@@ -2226,6 +2236,26 @@ Gostaria de conversar sobre essas possibilidades.
 
 Budget should be included only if user informed it and product owner chooses to keep it in WhatsApp. Default implementation: include it in stored lead, omit it from message to keep conversation more natural.
 
+## 26.3 Handoff semantics and tracking
+
+The product distinguishes three independent concepts:
+
+1. commercial stage in `mvp_leads.status`;
+2. customer WhatsApp handoff represented by `whatsapp_handoff_at`;
+3. human follow-up recorded explicitly by an authorized Atrium administrator.
+
+> **Opening WhatsApp does not mean `CONTACTED`.**
+
+The public post-diagnostic click proves only that the WhatsApp handoff was initiated. It does not prove that a message was sent, delivered, read or answered.
+
+The first click may be tracked asynchronously through the dedicated `track-lead-handoff` Edge Function using the existing browser-held `submissionId` plus `publicCode`. Tracking must be idempotent, must never change commercial status or `last_contact_at`, and must never delay or block opening WhatsApp.
+
+```text
+tracking failure -> WhatsApp still opens
+```
+
+Admin labels must say clearly whether the visitor opened WhatsApp after the diagnostic, never that the customer contacted Atrium or started a conversation based only on the click.
+
 ---
 
 # 27. Lead data model
@@ -2273,6 +2303,11 @@ create table public.mvp_leads (
   status text not null default 'NEW',
   internal_notes text,
 
+  status_updated_at timestamptz,
+  whatsapp_handoff_at timestamptz null,
+  last_contact_at timestamptz null,
+  next_follow_up_at timestamptz null,
+
   consent_contact boolean not null,
   consent_at timestamptz not null
 );
@@ -2292,6 +2327,67 @@ LOST
 Before M6B, status may be updated manually from the Supabase dashboard.
 
 M6B adds only the approved internal Admin Lite workflow. No generic or multi-tenant CRM is built.
+
+For M6B.2, the new timestamp fields above must be introduced only through a new additive migration. Existing applied migrations remain immutable. `internal_notes`, if present historically, is not the operational source for new notes: M6B.2 notes are append-only activities in `public.mvp_lead_activities`.
+
+## 27.2 Commercial status semantics
+
+`public.mvp_leads.status` remains the single source of truth for the current commercial stage:
+
+- `NEW`: captured successfully, with no human contact explicitly recorded by Atrium;
+- `CONTACTED`: real human follow-up/contact explicitly recorded by an authorized administrator;
+- `QUALIFIED`: human interaction confirmed commercial relevance;
+- `PROPOSAL`: proposal sent or presented;
+- `WON`: converted into a client/project;
+- `LOST`: closed without conversion.
+
+A lead may remain `NEW` after the visitor opens WhatsApp. Delivery of the M6A e-mail and clicking any WhatsApp link also do not imply `CONTACTED`.
+
+The Admin may correct statuses when necessary; V1 does not impose an inflexible one-way state machine. Every real status change must update `status_updated_at` and be auditable in activity history.
+
+## 27.3 Operational timestamps
+
+- `status_updated_at`: latest commercial status change;
+- `whatsapp_handoff_at`: first recorded public post-diagnostic WhatsApp opening, using first-write-wins semantics such as `coalesce(whatsapp_handoff_at, now())`;
+- `last_contact_at`: latest real human contact explicitly recorded by an authorized administrator;
+- `next_follow_up_at`: optional scheduled human follow-up.
+
+For existing records, any backfill must be explicit and semantically justified. If audited records are exclusively test/pre-launch data, `created_at` may be used as the initial `status_updated_at` baseline.
+
+## 27.4 Table `mvp_lead_activities`
+
+M6B.2 introduces the internal append-only table `public.mvp_lead_activities` for an immutable/auditable operational timeline. It is not a generic CRM event platform.
+
+Minimum conceptual schema:
+
+```text
+id                uuid primary key
+lead_id           uuid not null -> public.mvp_leads(id)
+activity_type     text not null
+created_at        timestamptz not null
+actor_user_id     uuid null
+from_status       text null
+to_status         text null
+note              text null
+follow_up_at      timestamptz null
+metadata          jsonb null
+```
+
+Minimum activity types:
+
+```text
+  LEAD_CREATED
+  WHATSAPP_HANDOFF
+STATUS_CHANGED
+CONTACT_RECORDED
+NOTE_ADDED
+  FOLLOW_UP_SET
+FOLLOW_UP_CLEARED
+```
+
+New lead creation is recorded as `LEAD_CREATED` by an `AFTER INSERT` trigger in the same transaction as `mvp_leads`. Existing leads receive only an idempotent `LEAD_CREATED` backfill using their factual `created_at`; no other historical action is inferred. Activities cannot be arbitrarily edited or deleted in V1. Corrections are represented by new activities.
+
+Notes are plain text, append-only, length-limited server-side and safely rendered. They must not contain HTML, secrets, sensitive documents or attachments.
 
 ---
 
@@ -2435,6 +2531,16 @@ Preferred V1 approach:
 - Edge Function inserts with server-side credentials;
 - RLS enabled as defense-in-depth.
 
+For M6B.2, both `public.mvp_leads` and `public.mvp_lead_activities` remain inaccessible directly to browser roles:
+
+```text
+anon                            -> no CRUD
+regular authenticated user     -> no direct CRUD
+authorized Admin Edge Function -> backend credential -> allowlisted operation
+```
+
+The activities table must use RLS, `FORCE ROW LEVEL SECURITY` where consistent with current project policy, explicit revokes for `anon` and `authenticated`, backend-only privileges and no public policies. No service-role/secret credential may enter the frontend bundle.
+
 ## 31.4 Abuse controls
 
 V1 controls:
@@ -2485,6 +2591,8 @@ lead row                  -> lead conversion
 ```
 
 No custom analytics backend in V1.
+
+`/contato/whatsapp` is a handoff-click proxy only. It must not be interpreted as proof of a sent message or a human conversation. M6B.2 may persist the first handoff click in `whatsapp_handoff_at` through the narrowly scoped `track-lead-handoff` function.
 
 If future business decisions require event-level analytics, add only after validation.
 
@@ -2851,11 +2959,14 @@ No frontend dependence on a proprietary server runtime.
 
 ## 42.2 External server component
 
-Only public write path:
+Approved public write paths:
 
 ```text
 create-lead Supabase Edge Function -> public.mvp_leads
+track-lead-handoff Supabase Edge Function -> first whatsapp_handoff_at + one WHATSAPP_HANDOFF activity
 ```
+
+`track-lead-handoff` is separate from `create-lead` and from authenticated Admin mutations. It accepts only the strict handoff contract, returns no lead details/PII and cannot change commercial status or human-contact timestamps.
 
 Approved asynchronous post-persistence notification path:
 
@@ -2867,6 +2978,15 @@ public.mvp_leads AFTER INSERT
 ```
 
 The notification path never writes or updates the lead and is not part of the lead-creation transaction.
+
+Approved authenticated Admin paths:
+
+```text
+admin-leads        -> read-only lead queries
+admin-lead-actions -> typed M6B.2 mutations after validated JWT + UUID allowlist
+```
+
+`admin-lead-actions` is not a generic CRUD endpoint. Its initial action allowlist is `CHANGE_STATUS`, `RECORD_CONTACT`, `ADD_NOTE`, `SET_FOLLOW_UP` and `CLEAR_FOLLOW_UP`.
 
 ## 42.3 State
 
@@ -3101,7 +3221,7 @@ Frontend public config:
 NEXT_PUBLIC_SITE_URL
 NEXT_PUBLIC_WHATSAPP_NUMBER
 NEXT_PUBLIC_SUPABASE_URL
-NEXT_PUBLIC_SUPABASE_ANON_KEY   # only if invocation requires it
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY   # only public browser key
 NEXT_PUBLIC_TURNSTILE_SITE_KEY
 ```
 
@@ -3121,6 +3241,12 @@ LEAD_NOTIFICATION_EMAIL
 LEAD_NOTIFICATION_FROM
 LEAD_NOTIFICATION_PROVIDER_API_KEY
 LEAD_WEBHOOK_SECRET
+```
+
+Admin authorization secret, available only to Admin Edge Functions:
+
+```text
+ADMIN_USER_IDS
 ```
 
 None of these values may use the `NEXT_PUBLIC_` prefix or be included in the frontend bundle.
@@ -3168,6 +3294,13 @@ Fallbacks:
 - lead form may offer retry and then WhatsApp fallback;
 - WhatsApp link must support web WhatsApp/browser route where possible;
 - diagnostic state remains local in session.
+
+M6B.2 degradation rules:
+
+- handoff tracking failure never blocks WhatsApp and never changes commercial status;
+- a failed Admin action must not pretend success and should preserve/refetch authoritative state;
+- if an activity insert fails for an action that also changes lead state, the complete operation must fail atomically;
+- if WhatsApp is unavailable, Admin contact data and e-mail actions remain available.
 
 ---
 
@@ -3248,6 +3381,16 @@ Do not implement:
 - subscriptions;
 - automatic proposal generation;
 - paid WhatsApp API integration;
+- proof that a WhatsApp message was sent, delivered or read;
+- automatic WhatsApp sending;
+- SMS, bulk outreach, marketing sequences or automated nurturing;
+- custom sales stages or configurable pipelines;
+- calendar or e-mail inbox synchronization;
+- AI-generated sales messages;
+- automatic lead-score changes based on Admin activity;
+- arbitrary editing/deletion of lead activities;
+- attachments to Admin notes;
+- a second notification e-mail triggered by handoff unless explicitly approved later;
 - custom transactional email platform beyond the approved M6A provider integration;
 - customer area;
 - custom analytics backend;
@@ -3296,18 +3439,20 @@ The approved current roadmap is:
 
 ```text
 M0–M5 concluded
-  -> M6A implemented, pending refinement/finalization
-  -> M5.1 Contact Form Input Hardening
-  -> M5/M6A regression
-  -> M6B Admin Lite
-  -> Netlify
+  -> M6A implemented and finalized
+  -> M5.1 Contact Form Input Hardening implemented
+  -> M5/M6A regression concluded
+  -> M6B.1 Admin Auth + Read-only Lead Operations implemented and validated against atrium-dev
+  -> M6B.2 Lead Operations + Handoff Tracking implemented and validated against atrium-dev
+  -> M6C Supporting pages
+  -> Netlify production deployment
   -> real/production Turnstile
   -> SEO/legal/analytics/polish
   -> final/mobile QA
   -> launch
 ```
 
-M5.1 remains mandatory before M6B and before public launch. M6C supporting pages are completed as part of the later SEO/legal/analytics/polish phase. Do not advance to M6B until the M5.1 implementation and the M5/M6A regression are complete.
+M5.1 and the M5/M6A regression were completed before M6B.1. M6B.1 remains read-only. Status, notes, contact and follow-up mutations plus public handoff tracking belong exclusively to M6B.2. No later milestone may remove or reinterpret the distinction between commercial status, customer WhatsApp handoff and admin-recorded contact.
 
 ## M0 — Project foundation
 
@@ -3510,7 +3655,7 @@ Acceptance:
 
 ## M6B — Lead Operations / Admin Lite
 
-Status: **approved scope, not implemented**.
+Status: **M6B.1 and M6B.2 implemented and validated against `atrium-dev`.**
 
 Objective:
 
@@ -3540,6 +3685,43 @@ Expected scope:
 - relevant diagnostic context;
 - actions to contact through WhatsApp or email.
 
+### M6B.1 — Admin Auth + Read-only Lead Operations
+
+Implemented scope:
+
+- static-export-compatible routes `/admin/login`, `/admin` and `/admin/lead?publicCode=...`;
+- e-mail/password authentication through Supabase Auth, with session restoration, refresh and logout;
+- private `ADMIN_USER_IDS` UUID allowlist;
+- dedicated read-only `admin-leads` Edge Function;
+- server-side JWT identity validation before allowlist authorization and any database access;
+- paginated lead listing, status summary, search and status/tier/timeframe/date filters;
+- responsive table on desktop and cards on mobile;
+- editorial lead detail with contact actions, profile, qualification, opportunities, selected human-readable diagnostic context, attribution and consent;
+- no-index/no-follow metadata for the admin routes.
+
+M6B.1 architecture:
+
+```text
+static browser UI
+  -> Supabase Auth with publishable key
+  -> bearer JWT
+  -> admin-leads Edge Function
+  -> server-side JWT validation
+  -> ADMIN_USER_IDS authorization
+  -> private backend credential
+  -> read-only PostgREST access to public.mvp_leads
+```
+
+The browser never receives the backend secret and never queries `public.mvp_leads` directly. `anon` and `authenticated` keep their table privileges revoked. The Edge Function accepts only `GET`/`OPTIONS`; it exposes no insert, update or delete operation.
+
+Not implemented in M6B.1:
+
+- status mutation;
+- service notes;
+- last-contact or next-follow-up mutation;
+- any schema/migration/grant/policy change;
+- generic or multi-tenant CRM behavior.
+
 Security requirements:
 
 - never put `service_role` or any equivalent privileged credential in the browser;
@@ -3549,7 +3731,427 @@ Security requirements:
 - any required database change must use a new additive migration;
 - do not turn M6B into a generic CRM, multi-tenant CRM or configurable commercial platform.
 
-The exact authorization and data-access architecture must be defined and reviewed as part of M6B before implementation begins.
+The M6B.1 authorization and data-access architecture is defined above. Any later mutation stage requires a separate authorization, audit and additive-migration review before implementation.
+
+### M6B.2 — Lead Operations + Handoff Tracking
+
+Status: **implemented, deployed and validated against `atrium-dev`**.
+
+M6B.2 extends the validated M6B.1 baseline without weakening its read-only security boundary. It must keep separate:
+
+```text
+commercial status
+customer WhatsApp handoff
+admin-recorded human contact
+```
+
+#### M6B.2.1 Deliverables
+
+- additive database migration only;
+- `status_updated_at`;
+- `whatsapp_handoff_at`;
+- `last_contact_at`;
+- `next_follow_up_at`;
+- append-only `public.mvp_lead_activities`;
+- public `track-lead-handoff` Edge Function;
+- separate handoff badge/filter in Admin;
+- authenticated `admin-lead-actions` Edge Function;
+- commercial status updates;
+- explicit human-contact recording;
+- append-only notes;
+- follow-up scheduling/clearing;
+- activity timeline;
+- runtime-neutral Atrium-to-customer WhatsApp builder;
+- contextual WhatsApp CTA in Admin and M6A notification e-mail;
+- full security, regression and real E2E validation.
+
+#### M6B.2.2 Public `track-lead-handoff`
+
+This function is separate from `create-lead` and all Admin mutation functions. It must:
+
+1. accept only the expected public handoff request;
+2. apply exact-origin CORS validation;
+3. enforce request size and strict identifier validation;
+4. identify an existing persisted lead using both the browser-held random `submissionId` and `publicCode`;
+5. verify both identifiers belong to the same lead;
+6. idempotently set only the first `whatsapp_handoff_at`;
+7. append `WHATSAPP_HANDOFF` exactly once;
+8. return only a minimal success/failure DTO with no lead details or PII;
+9. never log the request body;
+10. never change `status` or `last_contact_at`.
+
+Preferred idempotent update:
+
+```sql
+whatsapp_handoff_at = coalesce(whatsapp_handoff_at, now())
+```
+
+On `/contato/whatsapp`, the click order is:
+
+1. build and open the customer-to-Atrium WhatsApp URL immediately;
+2. start tracking without making navigation depend on it;
+3. use a browser-safe fire-and-forget/keepalive mechanism where appropriate;
+4. preserve WhatsApp conversion even if tracking fails.
+
+The public tracking contract must not identify leads by phone or e-mail.
+
+#### M6B.2.3 Handoff visibility in Admin
+
+Lead list adds a second, independent indicator:
+
+```text
+Status: Novo
+WhatsApp: Abriu
+```
+
+Allowed editorial meaning:
+
+```text
+Abriu WhatsApp após o diagnóstico
+Não abriu WhatsApp após o diagnóstico
+```
+
+Compact labels such as `WhatsApp aberto` and `Sem handoff` are acceptable when context is unambiguous. The UI must never infer `Mensagem enviada`, `Conversa iniciada` or `Cliente entrou em contato` from this timestamp.
+
+List filter:
+
+```text
+WhatsApp após diagnóstico:
+- Todos
+- Abriu
+- Não abriu
+```
+
+The detail operational block shows the timestamp or the explicit absence of a handoff, plus clarification that opening WhatsApp does not prove the message was sent.
+
+#### M6B.2.4 Admin mutation architecture
+
+M6B.1 `admin-leads` remains read-only. Mutations are isolated in:
+
+```text
+admin-lead-actions
+```
+
+Security flow:
+
+```text
+Admin browser
+  -> Supabase Auth JWT
+  -> admin-lead-actions
+  -> validate JWT server-side through the official identity mechanism
+  -> extract validated user.id
+  -> exact ADMIN_USER_IDS check
+  -> validate typed action and payload
+  -> backend-only database operation
+```
+
+Authentication is not authorization. E-mail is never an authorization key. The function uses exact CORS allowlists, contains no backend credential in the browser and accepts no arbitrary table/column identifiers.
+
+Initial action allowlist:
+
+```text
+CHANGE_STATUS
+RECORD_CONTACT
+ADD_NOTE
+SET_FOLLOW_UP
+CLEAR_FOLLOW_UP
+```
+
+No generic CRUD endpoint is permitted.
+
+Whenever an action changes `mvp_leads` and appends an activity, both operations must be atomic. Preferred approaches are a small backend-only PostgreSQL function/RPC or another explicit transaction-capable server mechanism. Status/state must never change permanently if its required audit activity fails.
+
+Avoid `SECURITY DEFINER` unless strictly necessary and separately reviewed. Use least privilege and explicit grants.
+
+#### M6B.2.5 Change status
+
+Admin exposes an explicit commercial status control with the existing six statuses. The server must:
+
+- reject invalid enum values;
+- reject or explicitly handle no-op changes;
+- update `mvp_leads.status`;
+- update `status_updated_at`;
+- append `STATUS_CHANGED` with `from_status`, `to_status`, validated admin UUID and timestamp;
+- keep the lead row and activity atomic;
+- support justified corrections rather than impose an overly rigid one-way state machine;
+- use confirmation for consequential terminal states where UX warrants it.
+
+#### M6B.2.6 Record human contact
+
+Admin exposes `Registrar contato` through the deliberately small initial contract `publicCode + RECORD_CONTACT`. The server records the current time. Channel, adjustable occurrence time and an optional contact note are not part of the implemented M6B.2 action contract; contextual observations remain append-only `ADD_NOTE` activities.
+
+The action must update `last_contact_at` and append `CONTACT_RECORDED`. When the current status is `NEW`, the operation may atomically transition it to `CONTACTED`; the transition and audit history must be part of the same transaction. A later status must never be downgraded.
+
+Clicking an Admin WhatsApp or e-mail link does not automatically record contact.
+
+#### M6B.2.7 Notes
+
+`Adicionar observação` appends a `NOTE_ADDED` activity and never overwrites earlier notes. Notes must be plain text, length-limited server-side, line-break-safe and rendered escaped. HTML, scripts, secrets, attachments and sensitive documents are forbidden.
+
+#### M6B.2.8 Follow-up
+
+Admin supports:
+
+```text
+Agendar follow-up
+Limpar follow-up
+```
+
+These actions update `next_follow_up_at` and append `FOLLOW_UP_SET` or `FOLLOW_UP_CLEARED`. Scheduling follow-up never changes commercial status automatically.
+
+The list should make due/overdue follow-ups detectable without becoming a complex CRM dashboard. If implemented without unnecessary complexity, the allowlisted server-side filter is:
+
+```text
+Follow-up:
+- Todos
+- Atrasado
+- Hoje
+- Próximos
+```
+
+#### M6B.2.9 Activity timeline
+
+Lead detail shows a consistently ordered human-readable timeline. Conceptual content:
+
+```text
+16/09 22:20  Lead criado
+16/09 22:21  Visitante abriu WhatsApp após diagnóstico
+17/09 09:13  Status: Novo -> Contatado
+17/09 09:13  Contato registrado via WhatsApp
+17/09 09:15  Observação adicionada
+18/09 14:00  Follow-up agendado
+```
+
+Lead creation may come from `mvp_leads.created_at`. Raw enums, internal JSON and database metadata must not appear when a human label exists.
+
+#### M6B.2.10 Admin list and detail priorities
+
+The list may add:
+
+- current commercial status;
+- WhatsApp handoff badge;
+- `last_contact_at`;
+- `next_follow_up_at`;
+- overdue indicator;
+- existing tier, score, timeframe and goal.
+
+Operational priority remains:
+
+```text
+What needs attention now?
+Who has already been approached?
+Who opened WhatsApp after registering?
+What is the next follow-up?
+```
+
+The detail adds an `ATENDIMENTO` block with status, WhatsApp handoff, latest contact, next follow-up and actions for WhatsApp, contact recording and notes. The list must not become a large analytics dashboard.
+
+All new handoff and follow-up filters are allowlisted and validated server-side. The browser cannot compose PostgREST syntax.
+
+#### M6B.2.11 Atrium-to-customer WhatsApp outreach
+
+Public diagnostic handoff (`Customer -> Atrium`) and Admin outreach (`Atrium -> Customer`) use separate builders/contracts.
+
+Create one reusable runtime-neutral/server-safe outbound builder, conceptually:
+
+```text
+buildLeadOutreachWhatsAppMessage()
+```
+
+The same builder output is used by:
+
+- Admin `Falar no WhatsApp`;
+- M6A notification e-mail `Falar no WhatsApp`.
+
+Canonical message direction:
+
+```text
+Olá, {primeiroNome}! Tudo bem?
+
+Aqui é da Atrium. Você realizou nosso diagnóstico e indicou interesse em {objetivoHumano}.
+
+A análise destacou principalmente {principalOportunidadeHumana} como uma oportunidade para sua operação.
+
+{momentoOpcional}
+
+Queria entender um pouco melhor o seu cenário e ver se faz sentido avançarmos em algum desses pontos.
+
+Podemos conversar por aqui?
+```
+
+The message uses the normalized M5.1 phone contract:
+
+```text
+https://wa.me/<canonicalPhone>?text=<urlEncodedMessage>
+```
+
+The customer-facing message must not contain tier, score, internal status, raw enums, raw diagnostic evidence, `answers_json`, surveillance language or the public code unless a specific operational need is approved. The administrator may edit the message before sending.
+
+Clicking `Falar no WhatsApp` opens the prefilled message but does not set `CONTACTED`, update `last_contact_at` or claim delivery. Actual contact is registered explicitly.
+
+#### M6B.2.12 M6A notification integration
+
+M6A remains asynchronous and independent from lead persistence. Its WhatsApp CTA uses the shared Atrium-to-customer builder and may include:
+
+> O WhatsApp abrirá com uma mensagem sugerida usando o contexto do diagnóstico. Revise antes de enviar.
+
+The initial INSERT notification must not claim that the visitor opened or did not open WhatsApp, because the handoff may happen after the e-mail is sent. The notification must not be delayed to await handoff. A second handoff notification is out of scope.
+
+Once a production Admin URL exists, the e-mail may add `Abrir lead no Admin` using only the public code as a browser reference. This is optional and must not expose authenticated data in the URL or block launch.
+
+#### M6B.2.13 Response DTOs, logging and privacy
+
+Admin functions continue returning explicit DTOs. Approved additions include:
+
+```text
+whatsappHandoffAt
+statusUpdatedAt
+lastContactAt
+nextFollowUpAt
+activities
+outreachWhatsAppUrl
+```
+
+Do not expose internal lead UUID unless technically required by an internal server operation, submission ID to the Admin browser unless unavoidable, backend keys, Turnstile data or raw database metadata. Prefer public code as the browser-facing lead reference.
+
+Server logs must not include JWT, Authorization, backend secret, full phone, full e-mail, notes, diagnostic answer payload or prefilled WhatsApp message. Allowed sanitized logs may include public code, action type, HTTP status, technical error code and admin UUID only when necessary for security/audit and consistent with privacy policy.
+
+Activity history is business data, not application logging.
+
+#### M6B.2.14 Migration and index rules
+
+Create one or more new additive migrations only. Never edit applied migrations and introduce no destructive migration.
+
+Permitted migration scope:
+
+- the four lead summary timestamps;
+- `public.mvp_lead_activities`;
+- required constraints;
+- only indexes justified by implemented Admin operations;
+- least-privilege grants/revokes;
+- atomic helper functions/RPCs if chosen and reviewed.
+
+Before any remote application:
+
+1. audit existing lead data;
+2. run `supabase db push --dry-run`;
+3. verify only expected new migrations;
+4. review RLS, `FORCE RLS`, policies, grants and function privileges;
+5. run the complete test/build suite.
+
+Index direction, only when justified:
+
+```text
+mvp_leads(status, created_at desc)
+mvp_leads(next_follow_up_at) where next_follow_up_at is not null
+mvp_leads(whatsapp_handoff_at) where whatsapp_handoff_at is not null
+mvp_lead_activities(lead_id, created_at desc)
+```
+
+Do not create speculative indexes for future CRM behavior.
+
+#### M6B.2.15 Required tests
+
+Public handoff tracking:
+
+- valid persisted identifier pair;
+- invalid public code or submission UUID;
+- mismatched pair;
+- repeat-click idempotency;
+- tracking failure does not block WhatsApp;
+- no commercial status or human-contact change;
+- no PII in response/logs.
+
+Admin actions and security:
+
+- missing/invalid/expired JWT -> `401`;
+- authenticated non-admin -> `403`;
+- authorized admin action;
+- invalid/unknown action rejected;
+- invalid status rejected;
+- arbitrary field/table mutation impossible;
+- exact-origin CORS and no wildcard;
+- no backend secret in frontend.
+
+Status/contact/activity atomicity:
+
+- valid and no-op status behavior;
+- `status_updated_at` updated;
+- status activity created atomically;
+- real contact updates `last_contact_at`;
+- `NEW` may atomically become `CONTACTED`;
+- later status is never downgraded;
+- contact activity created.
+
+Notes/follow-up:
+
+- notes append rather than overwrite;
+- note length and safe plain-text rendering;
+- set, replace and clear follow-up;
+- correct append-only activities.
+
+WhatsApp outreach:
+
+- canonical phone and valid `wa.me` URL;
+- first-name extraction/fallback;
+- humanized goal/opportunity/timeframe;
+- no tier, score or status in message;
+- correct URL encoding;
+- Admin and e-mail CTA share identical builder output.
+
+#### M6B.2.16 Real E2E acceptance
+
+Flow A — visitor does not open WhatsApp:
+
+```text
+lead created -> status NEW -> whatsapp_handoff_at null -> Admin shows "Não abriu"
+-> Admin opens contextual outreach -> explicitly records contact
+-> status CONTACTED -> timeline updated
+```
+
+Flow B — visitor opens WhatsApp immediately:
+
+```text
+lead created -> status NEW -> public WhatsApp click
+-> whatsapp_handoff_at recorded -> status remains NEW
+-> Admin shows "Abriu WhatsApp"
+```
+
+Flow C — tracking unavailable:
+
+```text
+lead created -> WhatsApp click -> tracking fails
+-> WhatsApp still opens -> lead remains usable
+```
+
+Flow D — unauthorized Admin mutation:
+
+```text
+valid Supabase Auth user -> UUID outside ADMIN_USER_IDS
+-> mutation denied -> no lead/activity modified
+```
+
+Flow E — follow-up lifecycle:
+
+```text
+CONTACTED -> set follow-up -> due indicator
+-> record contact -> clear/reschedule follow-up
+-> append-only history remains intact
+```
+
+#### M6B.2.17 Acceptance
+
+- public WhatsApp click never implies `CONTACTED`;
+- handoff and commercial status remain independently visible;
+- all Admin mutations require validated Auth identity plus UUID allowlist;
+- every state-changing action is auditable;
+- summary row and history remain atomically consistent;
+- handoff tracking failure never blocks conversion;
+- Admin and e-mail use the same outreach builder contract;
+- no backend secret enters the browser;
+- no public CRUD grants or policies are added;
+- mobile Admin remains usable;
+- Admin Lite remains an internal operational tool rather than a CRM product.
 
 ---
 
@@ -3641,6 +4243,15 @@ Before finishing each milestone:
 If a requirement is ambiguous, choose the smallest implementation consistent with the SDD instead of expanding scope.
 ```
 
+When M6B.2 implementation begins, Codex must additionally:
+
+1. inspect the validated M6B.1 implementation before proposing changes;
+2. preserve its authentication, UUID authorization and no-direct-browser-DB guarantees;
+3. propose and review the additive migration, atomicity strategy, RLS and grants before applying anything;
+4. implement public handoff tracking, Admin actions and shared outreach builder as separate concerns;
+5. run full regressions after each security-sensitive change;
+6. never deploy, push migrations or commit unless explicitly instructed.
+
 ---
 
 # 57. Definition of Done — MVP
@@ -3726,12 +4337,18 @@ None of these items blocks frontend/product implementation.
 14. Founder experience is used as trust proof, not the main product.
 15. Cred Marvi is the first public case, with conservative claims.
 16. No blog in V1.
-17. No LLM, agents, authentication, customer portal or platform engine in V1.
+17. No LLM, agents, public-user authentication, customer portal or platform engine in V1; the internal M6B Admin Lite authentication is the explicit exception.
 18. New reusable product capabilities are considered only after real repeated demand.
 19. `public.mvp_leads` is the official physical lead table and applied migrations are immutable.
 20. M6A notification is asynchronous and can never control or roll back lead persistence.
 21. M5.1 hardening is mandatory before M6B and public launch.
 22. M6B is an authenticated internal operational tool, not a reusable CRM product.
+23. WhatsApp handoff is independent from commercial status; opening WhatsApp never proves `CONTACTED`.
+24. Human contact must be explicitly recorded by an authorized administrator.
+25. Status changes, contacts, notes and follow-ups use append-only `mvp_lead_activities` history.
+26. Admin and M6A e-mail share one Atrium-to-customer contextual WhatsApp builder.
+27. Clicking the Admin WhatsApp CTA does not prove a message was sent and does not update status/contact timestamps.
+28. M6B.2 uses additive migrations, typed actions and atomic audit history; its implementation, remote database structures and Edge Functions were validated against `atrium-dev`.
 
 ---
 
@@ -3755,6 +4372,15 @@ Next.js static frontend
 + Netlify static hosting
 + Cloudflare Web Analytics
 + WhatsApp handoff
+```
+
+Implemented operational extension:
+
+```text
++ track-lead-handoff
++ admin-lead-actions
++ public.mvp_lead_activities
++ separate handoff/status/contact semantics
 ```
 
 Business summary:

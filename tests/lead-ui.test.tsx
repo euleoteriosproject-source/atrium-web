@@ -18,6 +18,7 @@ import { saveDiagnosticSession } from "@/lib/session";
 
 const mocks = vi.hoisted(() => ({
   createLead: vi.fn(),
+  trackLeadHandoff: vi.fn(),
   push: vi.fn(),
 }));
 
@@ -27,6 +28,7 @@ vi.mock("next/navigation", () => ({
 
 vi.mock("@/domain/lead/client", () => ({
   createLead: mocks.createLead,
+  trackLeadHandoff: mocks.trackLeadHandoff,
 }));
 
 vi.mock("@/lib/env", () => ({
@@ -95,6 +97,7 @@ describe("M5 lead UI", () => {
   beforeEach(() => {
     sessionStorage.clear();
     mocks.createLead.mockReset();
+    mocks.trackLeadHandoff.mockReset().mockResolvedValue(true);
     mocks.push.mockReset();
     vi.spyOn(window.crypto, "randomUUID").mockReturnValue(
       "123e4567-e89b-42d3-a456-426614174000",
@@ -313,6 +316,18 @@ describe("M5 lead UI", () => {
       "href",
       expect.stringMatching(/^https:\/\/wa\.me\/5511999999999\?text=/),
     );
+    fireEvent.click(whatsapp);
+    await waitFor(() =>
+      expect(mocks.trackLeadHandoff).toHaveBeenCalledWith(
+        {
+          submissionId: "123e4567-e89b-42d3-a456-426614174000",
+          publicCode: "AT-26-ABC123",
+        },
+        expect.objectContaining({
+          supabaseUrl: "https://project.supabase.co",
+        }),
+      ),
+    );
     expect(mocks.push).not.toHaveBeenCalled();
 
     view.unmount();
@@ -332,5 +347,30 @@ describe("M5 lead UI", () => {
       ),
     ).toBeInTheDocument();
     expect(screen.getByText(/tentar registrar novamente/i)).toBeInTheDocument();
+    expect(mocks.trackLeadHandoff).toHaveBeenCalledTimes(1);
+  });
+
+  it("keeps the WhatsApp link available when handoff tracking fails", async () => {
+    saveDiagnosticSession(completedDiagnostic());
+    saveLeadHandoff({
+      version: "1.0.0",
+      submissionId: "123e4567-e89b-42d3-a456-426614174000",
+      companyName: "Empresa Exemplo",
+      timeframe: "NOW",
+      publicCode: "AT-26-ABC123",
+      persisted: true,
+      createdAt: "2026-09-11T12:00:00.000Z",
+    });
+    mocks.trackLeadHandoff.mockResolvedValue(false);
+    render(<WhatsAppHandoff />);
+    const whatsapp = await screen.findByRole("link", {
+      name: "Abrir WhatsApp",
+    });
+    fireEvent.click(whatsapp);
+    expect(whatsapp).toHaveAttribute(
+      "href",
+      expect.stringMatching(/^https:\/\/wa\.me\//),
+    );
+    await waitFor(() => expect(mocks.trackLeadHandoff).toHaveBeenCalledOnce());
   });
 });

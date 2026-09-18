@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Container } from "@/components/layout/container";
 import { Eyebrow } from "@/components/ui/eyebrow";
 import { LinkButton } from "@/components/ui/link-button";
+import { trackLeadHandoff } from "@/domain/lead/client";
 import { buildWhatsAppUrl } from "@/domain/lead/whatsapp";
 import { loadLeadHandoff, type LeadHandoff } from "@/domain/lead/session";
 import type { DiagnosticState } from "@/domain/diagnostic/types";
@@ -45,6 +46,22 @@ export function WhatsAppHandoff() {
       publicCode: state.handoff.publicCode,
     });
   }, [state]);
+
+  function trackAfterNavigationStarts() {
+    if (!state?.handoff.persisted || !state.handoff.publicCode) return;
+    window.setTimeout(() => {
+      void trackLeadHandoff(
+        {
+          submissionId: state.handoff.submissionId,
+          publicCode: state.handoff.publicCode as string,
+        },
+        {
+          supabaseUrl: publicEnv.NEXT_PUBLIC_SUPABASE_URL,
+          publishableKey: publicEnv.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
+        },
+      );
+    }, 0);
+  }
 
   if (state === undefined) {
     return (
@@ -130,6 +147,7 @@ export function WhatsAppHandoff() {
                 href={whatsappUrl}
                 target="_blank"
                 rel="noreferrer"
+                onClick={trackAfterNavigationStarts}
                 className="motion-interactive relative inline-flex min-h-15 items-center justify-center rounded-control border border-navy-950 bg-navy-950 px-8 text-body font-semibold text-offwhite transition-colors hover:bg-navy-800"
               >
                 Abrir WhatsApp

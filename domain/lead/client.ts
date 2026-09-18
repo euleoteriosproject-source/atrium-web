@@ -46,3 +46,30 @@ export async function createLead(
     throw new LeadSubmissionError();
   }
 }
+
+export async function trackLeadHandoff(
+  payload: Readonly<{ submissionId: string; publicCode: string }>,
+  config: LeadEndpointConfig,
+  fetcher: typeof fetch = fetch,
+) {
+  if (!config.supabaseUrl) return false;
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+  if (config.publishableKey) headers.apikey = config.publishableKey;
+  try {
+    const response = await fetcher(
+      `${config.supabaseUrl.replace(/\/$/, "")}/functions/v1/track-lead-handoff`,
+      {
+        method: "POST",
+        headers,
+        body: JSON.stringify(payload),
+        keepalive: true,
+        signal: AbortSignal.timeout(3_000),
+      },
+    );
+    return response.ok;
+  } catch {
+    return false;
+  }
+}

@@ -3,3 +3,12 @@ verify_jwt = false
 
 [functions.notify-new-lead]
 verify_jwt = false
+
+[functions.admin-leads]
+verify_jwt = false
+
+[functions.track-lead-handoff]
+verify_jwt = false
+
+[functions.admin-lead-actions]
+verify_jwt = false

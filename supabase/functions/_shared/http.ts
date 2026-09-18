@@ -18,6 +18,27 @@ export function resolveSupabaseSecretKey(input: {
   return input.localSecretKey || input.legacyServiceRoleKey || undefined;
 }
 
+export function resolveSupabasePublishableKey(input: {
+  publishableKeysJson?: string;
+  localPublishableKey?: string;
+  legacyAnonKey?: string;
+}) {
+  if (input.publishableKeysJson) {
+    try {
+      const keys = JSON.parse(input.publishableKeysJson) as Record<
+        string,
+        unknown
+      >;
+      if (typeof keys.default === "string" && keys.default.length > 0) {
+        return keys.default;
+      }
+    } catch {
+      // Invalid configuration is handled as an unavailable service by the caller.
+    }
+  }
+  return input.localPublishableKey || input.legacyAnonKey || undefined;
+}
+
 export function parseAllowedOrigins(value: string | undefined) {
   return (value ?? "")
     .split(",")

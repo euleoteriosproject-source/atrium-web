@@ -15,6 +15,7 @@ import {
   parseLeadInsertEvent,
   type LeadNotificationConfig,
 } from "@/supabase/functions/_shared/lead-notification";
+import { buildLeadOutreachWhatsAppUrl } from "@/supabase/functions/_shared/lead-outreach-whatsapp";
 
 const config: LeadNotificationConfig = {
   webhookSecret: "webhook-secret-for-tests",
@@ -144,6 +145,17 @@ describe("notify-new-lead", () => {
     expect(await response.json()).toEqual({ success: true });
     expect(emailProvider.send).toHaveBeenCalledOnce();
     const message = emailProvider.send.mock.calls[0]?.[0];
+    const outreachUrl = buildLeadOutreachWhatsAppUrl({
+      contactName: "Vinicius",
+      phone: "5551982895068",
+      primaryGoal: "SALES",
+      timeframe: "NOW",
+      topOpportunities: [
+        { dimension: "sales" },
+        { dimension: "service" },
+        { dimension: "automation" },
+      ],
+    }) as string;
     expect(message?.subject).toBe(
       "[Atrium] Novo lead B — Teste — AT-26-ABC123",
     );
@@ -152,9 +164,7 @@ describe("notify-new-lead", () => {
     expect(message?.text).toContain("Vinicius\nTeste");
     expect(message?.text).toContain("Imobiliário • 21–50 pessoas");
     expect(message?.text).toContain("WhatsApp: +55 (51) 98289-5068");
-    expect(message?.text).toContain(
-      "Falar no WhatsApp: https://wa.me/5551982895068",
-    );
+    expect(message?.text).toContain(`Falar no WhatsApp: ${outreachUrl}`);
     expect(message?.text).toContain("Atrair mais clientes");
     expect(message?.text).toContain("Agora / o quanto antes");
     expect(message?.text).toContain("Tier B • 62/100");
@@ -171,7 +181,8 @@ describe("notify-new-lead", () => {
     expect(message?.text).toContain(
       "Este lead está como NOVO.\nFaça o primeiro contato com este lead.",
     );
-    expect(message?.html).toContain("https://wa.me/5551982895068");
+    expect(message?.html).toContain(outreachUrl.replaceAll("&", "&amp;"));
+    expect(message?.html).toContain("Revise antes de enviar.");
     expect(message?.html).toContain("mailto:teste%40teste.com");
     expect(message?.html).toContain("Imobiliário • 21–50 pessoas");
     expect(message?.html).toContain("Atrair mais clientes");

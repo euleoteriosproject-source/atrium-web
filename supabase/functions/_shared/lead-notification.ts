@@ -1,6 +1,7 @@
 import type { EmailMessage, EmailProvider } from "./email-provider.ts";
 import { formatBrazilPhone, normalizeBrazilPhone } from "./brazil-phone.ts";
 import { leadEmailPattern } from "./lead-constraints.ts";
+import { buildLeadOutreachWhatsAppUrl } from "./lead-outreach-whatsapp.ts";
 import {
   businessSegmentOptions,
   companySizeLabel,
@@ -289,9 +290,13 @@ export function buildLeadNotificationEmail(
   const phone = canonicalPhone
     ? (formatBrazilPhone(canonicalPhone) ?? unknownLabel)
     : unknownLabel;
-  const whatsappUrl = canonicalPhone
-    ? `https://wa.me/${canonicalPhone}`
-    : undefined;
+  const whatsappUrl = buildLeadOutreachWhatsAppUrl({
+    contactName: lead.contactName,
+    phone: lead.phone,
+    primaryGoal: lead.primaryGoal,
+    timeframe: lead.timeframe,
+    topOpportunities: lead.topOpportunities,
+  });
   const email =
     lead.email && leadEmailPattern.test(lead.email) ? lead.email : undefined;
   const businessSegment =
@@ -407,7 +412,7 @@ export function buildLeadNotificationEmail(
               ${htmlDetailRow("WhatsApp", phone)}
               ${email ? htmlDetailRow("E-mail", email) : ""}
             </table>
-            ${whatsappUrl ? `<a href="${whatsappUrl}" style="display:inline-block;margin-top:4px;padding:12px 18px;background:#D4AF37;border:1px solid #D4AF37;color:#0B1320;font-size:14px;font-weight:700;line-height:20px;text-decoration:none;">Falar no WhatsApp</a>` : ""}
+            ${whatsappUrl ? `<a href="${escapeHtml(whatsappUrl)}" style="display:inline-block;margin-top:4px;padding:12px 18px;background:#D4AF37;border:1px solid #D4AF37;color:#0B1320;font-size:14px;font-weight:700;line-height:20px;text-decoration:none;">Falar no WhatsApp</a><p style="margin:12px 0 0;color:#596273;font-size:13px;line-height:20px;">O WhatsApp abrirÃ¡ com uma mensagem sugerida usando o contexto do diagnÃ³stico. Revise antes de enviar.</p>` : ""}
             ${email ? `<p style="margin:14px 0 0;font-size:13px;line-height:20px;"><a href="mailto:${encodeURIComponent(email)}" style="color:#0B1320;text-decoration:underline;">Enviar e-mail</a></p>` : ""}
           </td></tr>
           <tr><td style="padding:28px 32px;border-top:1px solid #E3E0D8;">
