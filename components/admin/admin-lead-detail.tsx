@@ -162,7 +162,7 @@ export function AdminLeadDetailView() {
       <main className="mx-auto w-full max-w-5xl px-5 py-10 sm:px-8 lg:py-14">
         <Link
           href="/admin"
-          className="text-body-sm font-bold underline decoration-gold-500 decoration-2 underline-offset-4"
+          className="text-body-sm font-bold underline decoration-link-decoration decoration-2 underline-offset-4"
         >
           ← Voltar para leads
         </Link>
@@ -185,7 +185,7 @@ export function AdminLeadDetailView() {
           <article className="mt-8 space-y-6">
             <header className="border-b border-navy-950/10 pb-8">
               <div className="flex flex-wrap items-center gap-3">
-                <p className="text-eyebrow font-bold tracking-[0.14em] text-gold-500 uppercase">
+                <p className="text-eyebrow font-bold tracking-[0.14em] text-brand-blue-deep uppercase">
                   {lead.publicCode}
                 </p>
                 <span className="rounded-full border border-navy-950/10 bg-offwhite px-3 py-1 text-caption font-bold">
@@ -286,7 +286,7 @@ export function AdminLeadDetailView() {
                     href={lead.outreachWhatsAppUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex min-h-11 items-center rounded-control border border-gold-500 bg-gold-500 px-4 text-body-sm font-bold text-navy-950 hover:bg-gold-300"
+                    className="inline-flex min-h-11 items-center rounded-control border border-accent-on-dark bg-accent-on-dark px-4 text-body-sm font-bold text-brand-navy hover:bg-brand-cyan"
                   >
                     Abrir WhatsApp
                   </a>
@@ -454,7 +454,7 @@ export function AdminLeadDetailView() {
                   {lead.opportunities.map((opportunity, index) => (
                     <li
                       key={`${opportunity.title}-${index}`}
-                      className="border-l-2 border-gold-500 pl-4"
+                      className="border-l-2 border-accent-strong pl-4"
                     >
                       <p className="font-bold">{opportunity.title}</p>
                       <p className="mt-1 text-body-sm text-gray-text">

@@ -75,7 +75,7 @@ export function ManualWorkCalculator() {
         className="flex flex-col justify-center border-t border-navy-950/10 bg-navy-950 p-7 text-offwhite sm:p-10 lg:border-t-0 lg:border-l"
         aria-live="polite"
       >
-        <p className="text-body-sm font-semibold text-gold-300">
+        <p className="text-body-sm font-semibold text-accent-on-dark">
           Estimativa mensal
         </p>
         <p className="mt-3 font-serif text-h2">

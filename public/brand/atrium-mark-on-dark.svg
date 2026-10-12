@@ -1,0 +1,11 @@
+<svg viewBox="0 0 560 460" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title">
+  <title id="title">Símbolo Atrium</title>
+  <defs>
+    <linearGradient id="atrium-dark-left" x1="70" y1="420" x2="310" y2="35" gradientUnits="userSpaceOnUse"><stop stop-color="#1677FF"/><stop offset="1" stop-color="#27C8F5"/></linearGradient>
+    <linearGradient id="atrium-dark-right" x1="298" y1="38" x2="520" y2="420" gradientUnits="userSpaceOnUse"><stop stop-color="#1757E8"/><stop offset=".55" stop-color="#1677FF"/><stop offset="1" stop-color="#1757E8"/></linearGradient>
+    <linearGradient id="atrium-dark-arch" x1="38" y1="410" x2="526" y2="270" gradientUnits="userSpaceOnUse"><stop stop-color="#1677FF"/><stop offset=".48" stop-color="#27C8F5"/><stop offset="1" stop-color="#1757E8"/></linearGradient>
+  </defs>
+  <path fill="url(#atrium-dark-right)" d="M294 38c25 0 45 14 58 38l190 344H432L259 108l17-34c7-14 10-22 18-36Z"/>
+  <path fill="url(#atrium-dark-left)" d="M39 420 215 76c12-24 32-38 59-38h36L166 320l-50 100H39Z"/>
+  <path fill="url(#atrium-dark-arch)" d="M39 420 109 293c40-72 105-111 183-111 80 0 146 39 186 111l70 127H438l-46-85c-22-41-57-62-100-62-42 0-77 21-99 62l-46 85H39Z"/>
+</svg>

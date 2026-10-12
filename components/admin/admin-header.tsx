@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
+import { BrandLogo } from "@/components/brand";
 import { Button } from "@/components/ui/button";
 
 import { useAdminAuth } from "./admin-auth-provider";
@@ -19,11 +20,15 @@ export function AdminHeader() {
   return (
     <header className="border-b border-offwhite/10 bg-navy-950 text-offwhite">
       <div className="mx-auto flex min-h-18 w-full max-w-content items-center justify-between gap-5 px-5 sm:px-8 lg:px-10">
-        <div className="flex items-baseline gap-3">
-          <Link href="/admin" className="text-h4 font-bold tracking-tight">
-            Atrium
+        <div className="flex items-center gap-3">
+          <Link
+            href="/admin"
+            aria-label="Atrium Admin — início"
+            className="inline-flex min-h-11 items-center"
+          >
+            <BrandLogo decorative surface="dark" className="h-7 w-auto" />
           </Link>
-          <span className="text-caption font-bold tracking-[0.14em] text-gold-300 uppercase">
+          <span className="text-caption font-bold tracking-[0.14em] text-accent-on-dark uppercase">
             Admin
           </span>
         </div>

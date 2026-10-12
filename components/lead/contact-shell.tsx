@@ -161,7 +161,7 @@ export function ContactShell() {
                       className="motion-interactive flex min-h-20 items-center justify-between gap-4 p-5 font-semibold transition-colors hover:bg-gray-bg sm:p-6"
                     >
                       {label}
-                      <span aria-hidden="true" className="text-gold-500">
+                      <span aria-hidden="true" className="text-brand-blue">
                         →
                       </span>
                     </Link>
@@ -471,7 +471,7 @@ export function ContactShell() {
                   Consulte a{" "}
                   <Link
                     href="/privacidade"
-                    className="font-semibold text-navy-950 underline decoration-gold-500 decoration-2 underline-offset-4"
+                    className="font-semibold text-navy-950 underline decoration-link-decoration decoration-2 underline-offset-4"
                   >
                     Política de Privacidade
                   </Link>

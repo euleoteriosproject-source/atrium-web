@@ -43,7 +43,10 @@ describe("M2 homepage", () => {
       name: /Descobrir oportunidades/,
     });
 
-    expect(opportunityLinks[0]).toHaveClass("bg-gold-500", "text-navy-950");
+    expect(opportunityLinks[0]).toHaveClass(
+      "bg-accent-on-dark",
+      "text-brand-navy",
+    );
     expect(opportunityLinks[1]).toHaveClass("bg-navy-950", "text-offwhite");
 
     for (const label of [
@@ -52,8 +55,8 @@ describe("M2 homepage", () => {
       "Analisar esse processo",
     ]) {
       expect(page.getByRole("link", { name: new RegExp(label) })).toHaveClass(
-        "bg-gold-500",
-        "text-navy-950",
+        "bg-accent-on-dark",
+        "text-brand-navy",
       );
     }
 

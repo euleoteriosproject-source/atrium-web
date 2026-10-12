@@ -3,6 +3,7 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 
+import { BrandLogo } from "@/components/brand";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -41,8 +42,9 @@ export function AdminLogin() {
   return (
     <main className="flex min-h-screen items-center bg-gray-bg px-5 py-12">
       <Card className="mx-auto w-full max-w-md">
-        <p className="text-eyebrow font-bold tracking-[0.14em] text-gold-500 uppercase">
-          Atrium Admin
+        <BrandLogo surface="light" className="h-10 w-auto" />
+        <p className="mt-6 text-eyebrow font-bold tracking-[0.14em] text-brand-blue-deep uppercase">
+          Admin
         </p>
         <h1 className="mt-3 font-serif text-h3">Acesso administrativo</h1>
         <p className="mt-3 text-body text-gray-text">

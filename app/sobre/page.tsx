@@ -133,7 +133,7 @@ export default function AboutPage() {
               <div>
                 <span
                   aria-hidden="true"
-                  className="font-serif text-display text-gold-300"
+                  className="font-serif text-display text-brand-blue"
                 >
                   VE
                 </span>

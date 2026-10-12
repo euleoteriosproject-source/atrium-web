@@ -30,7 +30,7 @@ export function InstitutionalHero({
     >
       <div
         aria-hidden="true"
-        className="absolute top-0 right-0 h-px w-2/5 bg-gold-500/55"
+        className="absolute top-0 right-0 h-px w-2/5 bg-accent-on-dark/55"
       />
       <Container className="relative">
         <div className="max-w-4xl">

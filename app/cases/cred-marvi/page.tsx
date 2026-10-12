@@ -161,7 +161,7 @@ export default function CredMarviCasePage() {
               </p>
             </div>
             <div>
-              <p className="text-eyebrow font-bold tracking-[0.14em] text-gold-300 uppercase">
+              <p className="text-eyebrow font-bold tracking-[0.14em] text-accent-on-dark uppercase">
                 O que este caso valida
               </p>
               <ul className="mt-7 space-y-5 text-body text-offwhite/75">

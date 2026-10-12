@@ -4,15 +4,15 @@ import { cn } from "@/lib/utils";
 
 export const buttonVariants = {
   primary:
-    "overflow-hidden border-navy-950 bg-navy-950 text-offwhite before:absolute before:inset-y-[-1px] before:left-[-1px] before:w-1 before:bg-gold-500 before:content-[''] hover:border-navy-800 hover:bg-navy-800 hover:before:bg-gold-300 active:translate-y-0 active:bg-navy-950",
+    "overflow-hidden border-navy-950 bg-navy-950 text-offwhite before:absolute before:inset-y-[-1px] before:left-[-1px] before:w-1 before:bg-accent-strong before:content-[''] hover:border-navy-800 hover:bg-navy-800 hover:before:bg-accent-on-dark active:translate-y-0 active:bg-navy-950",
   accent:
-    "border-gold-500 bg-gold-500 text-navy-950 hover:border-gold-300 hover:bg-gold-300 active:border-gold-500 active:bg-gold-500 focus-visible:outline-gold-300",
+    "border-accent-on-dark bg-accent-on-dark text-brand-navy hover:border-brand-cyan hover:bg-brand-cyan active:border-brand-blue active:bg-brand-cyan/90 focus-visible:outline-brand-cyan",
   outlineDark:
-    "border-offwhite/35 bg-transparent text-offwhite hover:border-offwhite hover:bg-offwhite/8 hover:text-offwhite active:border-offwhite/75 active:bg-offwhite/12 focus-visible:outline-gold-300",
+    "border-offwhite/35 bg-transparent text-offwhite hover:border-offwhite hover:bg-offwhite/8 hover:text-offwhite active:border-offwhite/75 active:bg-offwhite/12 focus-visible:outline-brand-cyan",
   secondary:
     "border-navy-950/25 bg-transparent text-navy-950 hover:border-navy-950 hover:bg-navy-950 hover:text-offwhite",
   ghost: "border-transparent bg-transparent text-navy-950 hover:bg-navy-950/5",
-  text: "border-transparent bg-transparent text-navy-950 underline decoration-gold-500 decoration-2 underline-offset-4 hover:decoration-gold-300",
+  text: "border-transparent bg-transparent text-navy-950 underline decoration-link-decoration decoration-2 underline-offset-4 hover:decoration-brand-cyan",
 } as const;
 
 export const buttonSizes = {

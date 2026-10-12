@@ -129,7 +129,7 @@ export function ResultShell() {
               ))}
             </div>
           ) : (
-            <div className="mt-10 max-w-3xl border-l-2 border-gold-500 bg-white px-6 py-6">
+            <div className="mt-10 max-w-3xl border-l-2 border-accent-strong bg-white px-6 py-6">
               <p className="text-body text-navy-800">
                 Se preferir, revise as respostas com exemplos mais concretos da
                 rotina. O diagnóstico não preencherá lacunas com recomendações
