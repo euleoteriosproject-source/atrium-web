@@ -13,7 +13,7 @@ export default function NotFound() {
       >
         <Container className="py-20 sm:py-28">
           <div className="max-w-3xl">
-            <p className="text-eyebrow font-bold tracking-[0.14em] text-gold-300 uppercase">
+            <p className="text-eyebrow font-bold tracking-[0.14em] text-brand-blue-deep uppercase">
               Erro 404
             </p>
             <h1 className="mt-5 text-h1 font-semibold">

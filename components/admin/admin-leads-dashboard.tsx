@@ -152,7 +152,7 @@ export function AdminLeadsDashboard() {
       <main className="mx-auto w-full max-w-content px-5 py-10 sm:px-8 lg:px-10 lg:py-14">
         <div className="flex flex-col gap-3 border-b border-navy-950/10 pb-8 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-eyebrow font-bold tracking-[0.14em] text-gold-500 uppercase">
+            <p className="text-eyebrow font-bold tracking-[0.14em] text-brand-blue-deep uppercase">
               Operação comercial
             </p>
             <h1 className="mt-2 font-serif text-h2">Leads</h1>
@@ -380,7 +380,7 @@ export function AdminLeadsDashboard() {
                         <td className="px-4 py-4 align-top">
                           <Link
                             href={`/admin/lead?publicCode=${lead.publicCode}`}
-                            className="font-bold underline decoration-gold-500 decoration-2 underline-offset-4"
+                            className="font-bold underline decoration-link-decoration decoration-2 underline-offset-4"
                           >
                             {lead.publicCode}
                           </Link>
@@ -443,7 +443,7 @@ export function AdminLeadsDashboard() {
                     <div className="flex items-start justify-between gap-3">
                       <Link
                         href={`/admin/lead?publicCode=${lead.publicCode}`}
-                        className="font-bold underline decoration-gold-500 decoration-2 underline-offset-4"
+                        className="font-bold underline decoration-link-decoration decoration-2 underline-offset-4"
                       >
                         {lead.publicCode}
                       </Link>

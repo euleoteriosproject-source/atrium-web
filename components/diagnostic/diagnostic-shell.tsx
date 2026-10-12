@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef } from "react";
 
+import { BrandLogo } from "@/components/brand";
 import { Container } from "@/components/layout/container";
 import { MobileMenu } from "@/components/layout/mobile-menu";
 import { Button } from "@/components/ui/button";
@@ -55,7 +56,7 @@ export function DiagnosticShell() {
           <h1
             ref={headingRef}
             tabIndex={-1}
-            className="mt-5 text-h1 font-semibold focus:outline-none"
+            className="mt-5 text-h1 font-semibold focus:outline-none focus-visible:outline-none focus-visible:shadow-none"
           >
             Vamos entender sua operação.
           </h1>
@@ -65,7 +66,7 @@ export function DiagnosticShell() {
             ficam apenas neste navegador.
           </p>
           {state.calculator?.estimatedMonthlyHours !== undefined ? (
-            <p className="mt-6 border-l-2 border-gold-500 pl-4 text-body text-navy-800">
+            <p className="mt-6 border-l-2 border-accent-strong pl-4 text-body text-navy-800">
               Sua estimativa de aproximadamente{" "}
               <strong>
                 {state.calculator.estimatedMonthlyHours.toLocaleString(
@@ -96,7 +97,7 @@ export function DiagnosticShell() {
           <h1
             ref={headingRef}
             tabIndex={-1}
-            className="mt-5 text-h2 font-semibold focus:outline-none"
+            className="mt-5 text-h2 font-semibold focus:outline-none focus-visible:outline-none focus-visible:shadow-none"
           >
             Diagnóstico concluído.
           </h1>
@@ -149,7 +150,7 @@ export function DiagnosticShell() {
           <h1
             ref={headingRef}
             tabIndex={-1}
-            className="mt-3 max-w-3xl text-h2 font-semibold focus:outline-none"
+            className="mt-3 max-w-3xl text-h2 font-semibold focus:outline-none focus-visible:outline-none focus-visible:shadow-none"
           >
             {currentQuestion.title}
           </h1>
@@ -210,10 +211,9 @@ function DiagnosticFrame({
           <Link
             href="/"
             aria-label="Atrium — página inicial"
-            className="inline-flex min-h-11 items-center gap-2 text-h4 font-semibold tracking-tight"
+            className="inline-flex min-h-11 items-center"
           >
-            <span aria-hidden="true" className="size-2 bg-gold-500" />
-            Atrium
+            <BrandLogo decorative surface="light" className="h-8 w-auto" />
           </Link>
           <div className="flex items-center gap-4">
             {onReset ? (

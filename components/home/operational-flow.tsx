@@ -6,7 +6,7 @@ export function HeroOperationalFlow() {
       className="relative mx-auto w-full max-w-xl"
       aria-labelledby="hero-flow-caption"
     >
-      <div className="absolute inset-8 rounded-full bg-gold-300/8 blur-3xl" />
+      <div className="absolute inset-8 rounded-full bg-brand-cyan/10 blur-3xl" />
       <div className="relative min-h-105 overflow-hidden rounded-card border border-offwhite/15 bg-navy-800/60 p-5 shadow-[0_28px_80px_rgb(0_0_0_/_0.2)] sm:min-h-120 sm:p-8">
         <div
           aria-hidden="true"
@@ -26,12 +26,12 @@ export function HeroOperationalFlow() {
           </div>
 
           <div aria-hidden="true" className="relative h-56 w-10 sm:w-16">
-            <span className="absolute top-1/2 left-0 h-px w-full -translate-y-1/2 bg-gold-500/45" />
-            <span className="flow-pulse absolute top-1/2 left-0 size-2 -translate-y-1/2 rounded-full bg-gold-300" />
+            <span className="absolute top-1/2 left-0 h-px w-full -translate-y-1/2 bg-brand-blue/55" />
+            <span className="flow-pulse absolute top-1/2 left-0 size-2 -translate-y-1/2 rounded-full bg-accent-on-dark" />
           </div>
 
           <div className="relative">
-            <div className="rounded-card border border-gold-300/35 bg-offwhite p-4 text-navy-950 sm:p-6">
+            <div className="rounded-card border border-brand-cyan/35 bg-offwhite p-4 text-navy-950 sm:p-6">
               <span className="block text-caption font-bold tracking-[0.14em] text-gray-text uppercase">
                 Fluxo organizado
               </span>
@@ -40,7 +40,7 @@ export function HeroOperationalFlow() {
               </span>
               <div className="mt-6 space-y-2" aria-hidden="true">
                 <span className="block h-1.5 w-full rounded-full bg-navy-950/15" />
-                <span className="block h-1.5 w-4/5 rounded-full bg-gold-500/55" />
+                <span className="block h-1.5 w-4/5 rounded-full bg-brand-blue/60" />
                 <span className="block h-1.5 w-3/5 rounded-full bg-navy-950/15" />
               </div>
             </div>
@@ -89,7 +89,7 @@ function FlowSequence({
       <p
         className={`border-b px-5 py-4 text-eyebrow font-bold tracking-[0.14em] uppercase sm:px-7 ${
           better
-            ? "border-offwhite/15 text-gold-300"
+            ? "border-offwhite/15 text-accent-on-dark"
             : "border-navy-950/10 text-gray-text"
         }`}
       >
@@ -105,7 +105,7 @@ function FlowSequence({
               aria-hidden="true"
               className={`flex size-6 shrink-0 items-center justify-center rounded-full border text-caption ${
                 better
-                  ? "border-gold-300/45 text-gold-300"
+                  ? "border-brand-cyan/45 text-accent-on-dark"
                   : "border-navy-950/20 text-gray-text"
               }`}
             >
@@ -116,7 +116,7 @@ function FlowSequence({
               <span
                 aria-hidden="true"
                 className={`ml-auto text-body-lg ${
-                  better ? "text-gold-300" : "text-navy-950/55"
+                  better ? "text-accent-on-dark" : "text-navy-950/55"
                 }`}
               >
                 ↓

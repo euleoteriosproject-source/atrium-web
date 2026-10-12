@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { BrandLogo } from "@/components/brand";
+
 import { TextLink } from "../ui/text-link";
 import { Container } from "./container";
 
@@ -33,10 +35,9 @@ export function Footer() {
             <Link
               href="/"
               aria-label="Atrium — página inicial"
-              className="inline-flex min-h-11 items-center gap-2 text-h4 font-semibold tracking-tight"
+              className="inline-flex min-h-11 items-center"
             >
-              <span aria-hidden="true" className="size-2 bg-gold-500" />
-              Atrium
+              <BrandLogo decorative surface="dark" className="h-9 w-auto" />
             </Link>
             <p className="mt-4 text-body-sm text-offwhite/70">
               Tecnologia que transforma operação em resultado.
@@ -44,7 +45,7 @@ export function Footer() {
           </div>
 
           <nav aria-label="Soluções no rodapé">
-            <p className="text-caption font-bold tracking-wide text-gold-300 uppercase">
+            <p className="text-caption font-bold tracking-wide text-accent-on-dark uppercase">
               Soluções
             </p>
             <ul className="mt-5 space-y-3">
@@ -53,7 +54,7 @@ export function Footer() {
                   <TextLink
                     href={item.href}
                     variant="navigation"
-                    className="text-offwhite/75 hover:text-gold-300"
+                    className="text-offwhite/75 hover:text-accent-on-dark"
                   >
                     {item.label}
                   </TextLink>
@@ -63,7 +64,7 @@ export function Footer() {
           </nav>
 
           <nav aria-label="Empresa no rodapé">
-            <p className="text-caption font-bold tracking-wide text-gold-300 uppercase">
+            <p className="text-caption font-bold tracking-wide text-accent-on-dark uppercase">
               Empresa
             </p>
             <ul className="mt-5 space-y-3">
@@ -72,7 +73,7 @@ export function Footer() {
                   <TextLink
                     href={item.href}
                     variant="navigation"
-                    className="text-offwhite/75 hover:text-gold-300"
+                    className="text-offwhite/75 hover:text-accent-on-dark"
                   >
                     {item.label}
                   </TextLink>
@@ -90,7 +91,7 @@ export function Footer() {
                 <TextLink
                   href={item.href}
                   variant="navigation"
-                  className="text-caption text-offwhite/60 hover:text-gold-300"
+                  className="text-caption text-offwhite/60 hover:text-accent-on-dark"
                 >
                   {item.label}
                 </TextLink>

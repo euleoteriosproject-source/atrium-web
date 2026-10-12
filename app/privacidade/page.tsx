@@ -101,7 +101,7 @@ const sections = [
         dados. Use a página de{" "}
         <Link
           href="/contato"
-          className="font-semibold text-navy-950 underline decoration-gold-500 decoration-2 underline-offset-4"
+          className="font-semibold text-navy-950 underline decoration-link-decoration decoration-2 underline-offset-4"
         >
           contato
         </Link>{" "}

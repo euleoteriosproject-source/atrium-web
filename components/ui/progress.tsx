@@ -41,7 +41,7 @@ export function Progress({
       >
         <div
           aria-hidden="true"
-          className="motion-section h-full rounded-full bg-gold-500 transition-[width]"
+          className="motion-section h-full rounded-full bg-accent-strong transition-[width]"
           style={{ width: `${percentage}%` }}
         />
       </div>

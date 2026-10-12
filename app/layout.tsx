@@ -28,6 +28,14 @@ export const metadata: Metadata = {
     template: "%s | Atrium",
   },
   description: "Tecnologia que transforma operação em resultado.",
+  openGraph: {
+    siteName: "Atrium",
+    type: "website",
+    locale: "pt_BR",
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
 };
 
 type RootLayoutProps = Readonly<{

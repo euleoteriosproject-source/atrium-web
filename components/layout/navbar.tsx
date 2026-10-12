@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { BrandLogo } from "@/components/brand";
+
 import { LinkButton } from "../ui/link-button";
 import { TextLink } from "../ui/text-link";
 import { Container } from "./container";
@@ -13,10 +15,9 @@ export function Navbar() {
         <Link
           href="/"
           aria-label="Atrium — página inicial"
-          className="inline-flex min-h-11 items-center gap-2 text-h4 font-semibold tracking-tight"
+          className="inline-flex min-h-11 items-center"
         >
-          <span aria-hidden="true" className="size-2 bg-gold-500" />
-          Atrium
+          <BrandLogo decorative surface="light" className="h-8 w-auto" />
         </Link>
 
         <nav

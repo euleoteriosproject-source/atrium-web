@@ -7,7 +7,7 @@ import {
 import { cn } from "@/lib/utils";
 
 const levelStyles = {
-  HIGH: "border-gold-500/45 bg-gold-300/18 text-navy-950",
+  HIGH: "border-brand-blue/45 bg-accent-soft text-brand-navy",
   MODERATE: "border-navy-950/18 bg-white text-navy-800",
   LOW: "border-navy-950/10 bg-gray-bg text-gray-text",
 } as const;
@@ -25,7 +25,7 @@ export function OpportunityCard({
     <article className="grid gap-7 border-t border-navy-950/15 py-10 first:border-t-0 first:pt-0 sm:grid-cols-[5rem_1fr] sm:gap-9 sm:py-12">
       <p
         aria-hidden="true"
-        className="font-serif text-h3 text-gold-500 sm:pt-1"
+        className="font-serif text-h3 text-brand-blue sm:pt-1"
       >
         {number}
       </p>
@@ -88,7 +88,7 @@ export function OpportunityCard({
         {opportunity.caution ? (
           <aside
             aria-label="Ponto de atenção"
-            className="mt-8 border-l-2 border-gold-500 bg-gold-300/12 px-5 py-4"
+            className="mt-8 border-l-2 border-accent-strong bg-accent-soft px-5 py-4"
           >
             <p className="text-caption font-bold tracking-wide text-navy-950 uppercase">
               Ponto de atenção

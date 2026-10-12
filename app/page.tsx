@@ -46,7 +46,7 @@ export default function Home() {
         >
           <div
             aria-hidden="true"
-            className="absolute top-0 right-0 h-px w-2/5 bg-gold-500/55"
+            className="absolute top-0 right-0 h-px w-2/5 bg-accent-on-dark/55"
           />
           <Container className="relative grid items-center gap-14 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
             <div>
@@ -70,7 +70,7 @@ export default function Home() {
                   Tenho um projeto em mente
                 </LinkButton>
               </div>
-              <p className="mt-8 max-w-xl border-l border-gold-500/65 pl-4 text-body-sm text-offwhite/60">
+              <p className="mt-8 max-w-xl border-l border-accent-on-dark/65 pl-4 text-body-sm text-offwhite/60">
                 Site, sistema, automação ou IA? Primeiro entendemos o problema.
                 Depois escolhemos a tecnologia.
               </p>
@@ -92,7 +92,7 @@ export default function Home() {
                   key={pain}
                   className="group motion-section min-h-44 border-r border-b border-navy-950/12 bg-offwhite p-5 transition-[background-color,color] hover:bg-navy-950 hover:text-offwhite sm:p-6"
                 >
-                  <span className="text-caption font-bold text-gray-text group-hover:text-gold-300">
+                  <span className="text-caption font-bold text-gray-text group-hover:text-brand-blue-deep">
                     {String(index + 1).padStart(2, "0")}
                   </span>
                   <blockquote className="mt-7 text-body font-semibold">
@@ -286,13 +286,16 @@ export default function Home() {
                   </ul>
                 </div>
                 <div className="bg-navy-950 p-7 text-offwhite sm:p-8">
-                  <p className="text-eyebrow font-bold tracking-[0.14em] text-gold-300 uppercase">
+                  <p className="text-eyebrow font-bold tracking-[0.14em] text-accent-on-dark uppercase">
                     Abordagem Atrium
                   </p>
                   <ul className="mt-7 space-y-4">
                     {caseAfter.map((item) => (
                       <li key={item} className="flex gap-3 text-body">
-                        <span aria-hidden="true" className="text-gold-300">
+                        <span
+                          aria-hidden="true"
+                          className="text-accent-on-dark"
+                        >
                           +
                         </span>
                         {item}
@@ -318,7 +321,7 @@ export default function Home() {
                   key={principle.title}
                   className="min-h-60 border-r border-b border-offwhite/15 p-7 sm:p-8"
                 >
-                  <span className="text-caption font-bold text-gold-300">
+                  <span className="text-caption font-bold text-accent-on-dark">
                     {String(index + 1).padStart(2, "0")}
                   </span>
                   <h3 className="mt-8 text-h4 font-semibold">
@@ -340,7 +343,7 @@ export default function Home() {
                 <div>
                   <span
                     aria-hidden="true"
-                    className="font-serif text-display text-gold-300"
+                    className="font-serif text-display text-accent-on-dark"
                   >
                     VE
                   </span>

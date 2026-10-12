@@ -25,9 +25,9 @@ export function MultiChoiceQuestion({ question, value, onChange }: Props) {
           <label
             key={choice.value}
             className={cn(
-              "motion-interactive flex min-h-15 cursor-pointer items-center gap-4 rounded-card border bg-white px-4 py-3.5 text-body transition-[border-color,background-color,box-shadow] has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-gold-500 sm:px-5",
+              "motion-interactive flex min-h-15 cursor-pointer items-center gap-4 rounded-card border bg-white px-4 py-3.5 text-body transition-[border-color,background-color,box-shadow] has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-focus-ring sm:px-5",
               checked
-                ? "border-navy-950 bg-navy-950/[0.035] shadow-[inset_3px_0_0_#d4af37]"
+                ? "border-navy-950 bg-navy-950/[0.035] shadow-[inset_3px_0_0_var(--color-accent-strong)]"
                 : "border-navy-950/15 hover:border-navy-950/45",
             )}
           >

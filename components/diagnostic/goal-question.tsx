@@ -40,7 +40,7 @@ export function GoalQuestion({
                 <label
                   key={goal}
                   className={cn(
-                    "flex min-h-12 cursor-pointer items-center gap-3 rounded-control border px-4 py-2.5 text-body-sm font-semibold has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-gold-500",
+                    "flex min-h-12 cursor-pointer items-center gap-3 rounded-control border px-4 py-2.5 text-body-sm font-semibold has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-focus-ring",
                     checked
                       ? "border-navy-950 bg-white"
                       : "border-transparent hover:border-navy-950/20",

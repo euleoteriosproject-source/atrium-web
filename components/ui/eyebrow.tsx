@@ -15,7 +15,7 @@ export function Eyebrow({ tone = "light", className, ...props }: EyebrowProps) {
   return (
     <p
       className={cn(
-        "flex items-center gap-3 text-eyebrow font-bold uppercase before:h-px before:w-7 before:bg-gold-500",
+        "flex items-center gap-3 text-eyebrow font-bold uppercase before:h-px before:w-7 before:bg-accent-strong",
         tones[tone],
         className,
       )}
