@@ -11,6 +11,7 @@ type InstitutionalHeroProps = Readonly<{
   primaryLabel?: string;
   secondaryHref?: string;
   secondaryLabel?: string;
+  compact?: boolean;
 }>;
 
 export function InstitutionalHero({
@@ -21,11 +22,12 @@ export function InstitutionalHero({
   primaryLabel,
   secondaryHref,
   secondaryLabel,
+  compact = false,
 }: InstitutionalHeroProps) {
   return (
     <Section
       background="dark"
-      spacing="spacious"
+      spacing={compact ? "default" : "spacious"}
       className="relative overflow-hidden"
     >
       <div

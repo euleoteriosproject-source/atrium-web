@@ -268,6 +268,15 @@ export default function Home() {
                 <TextLink href="/cases/cred-marvi" className="mt-7 inline-flex">
                   Conhecer o caso <span aria-hidden="true">→</span>
                 </TextLink>
+                <TextLink
+                  href="https://credmarvi.netlify.app/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  variant="subtle"
+                  className="mt-4 inline-flex"
+                >
+                  Ver projeto publicado <span aria-hidden="true">↗</span>
+                </TextLink>
               </div>
               <div className="grid overflow-hidden rounded-card border border-navy-950/12 shadow-card sm:grid-cols-2">
                 <div className="bg-gray-bg p-7 sm:p-8">

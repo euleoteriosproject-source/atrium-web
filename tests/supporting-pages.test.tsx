@@ -2,6 +2,7 @@ import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 
 import CredMarviCasePage from "@/app/cases/cred-marvi/page";
+import DemonstrationsPage from "@/app/demonstracoes/page";
 import { metadata as adminMetadata } from "@/app/admin/layout";
 import { metadata as handoffMetadata } from "@/app/contato/whatsapp/page";
 import { metadata as resultMetadata } from "@/app/diagnostico/resultado/page";
@@ -27,7 +28,7 @@ describe("M6C supporting pages", () => {
     expect(
       screen.getByRole("heading", {
         level: 1,
-        name: /Não vendemos tecnologia isolada/i,
+        name: /Tecnologia certa para o problema certo/i,
       }),
     ).toBeInTheDocument();
 
@@ -58,6 +59,56 @@ describe("M6C supporting pages", () => {
     expect(
       document.querySelector('a[href="/diagnostico?goal=AI"]'),
     ).toBeTruthy();
+    for (const id of [
+      "sites-e-experiencias",
+      "automacoes-e-integracoes",
+      "sistemas-sob-medida",
+      "ia-aplicada",
+    ]) {
+      expect(document.getElementById(id)).toBeTruthy();
+      expect(document.querySelector(`a[href="#${id}"]`)).toBeTruthy();
+    }
+    expect(
+      screen.getByRole("link", { name: /Ver demonstração Auto Center/i }),
+    ).toHaveAttribute("href", "/demonstracoes#auto-center");
+    expect(
+      screen
+        .getAllByRole("article")
+        .filter((article) =>
+          article.textContent?.includes("Ver demonstração Auto Center"),
+        ),
+    ).toHaveLength(1);
+  });
+
+  it("presents the Auto Center demonstration as honest commercial proof", () => {
+    render(<DemonstrationsPage />);
+
+    expect(document.getElementById("auto-center")).toBeTruthy();
+    expect(
+      screen.getByRole("heading", {
+        name: /Uma experiência digital que começa antes do WhatsApp/i,
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/não representa uma oficina real/i),
+    ).toBeInTheDocument();
+
+    const externalLink = screen.getByRole("link", {
+      name: /Abrir demonstração/i,
+    });
+    expect(externalLink).toHaveAttribute(
+      "href",
+      "https://atrium-auto-center.netlify.app/",
+    );
+    expect(externalLink).toHaveAttribute("target", "_blank");
+    expect(externalLink).toHaveAttribute(
+      "rel",
+      expect.stringContaining("noopener"),
+    );
+    expect(externalLink).toHaveAttribute(
+      "rel",
+      expect.stringContaining("noreferrer"),
+    );
   });
 
   it.each([
@@ -105,6 +156,14 @@ describe("M6C supporting pages", () => {
     expect(
       document.querySelector('a[href="/diagnostico?goal=AUTOMATION"]'),
     ).toBeTruthy();
+    const publicProject = screen.getByRole("link", {
+      name: /Ver site da Cred Marvi/i,
+    });
+    expect(publicProject).toHaveAttribute(
+      "href",
+      "https://credmarvi.netlify.app/",
+    );
+    expect(publicProject).toHaveAttribute("target", "_blank");
   });
 
   it("presents Atrium as a company and keeps the founder as supporting proof", () => {
@@ -187,9 +246,14 @@ describe("M6C supporting pages", () => {
     ]) {
       expect(container.querySelector(`a[href="${href}"]`)).toBeTruthy();
     }
-    expect(
-      screen.getByRole("link", { name: "Demonstrações" }),
-    ).toHaveAttribute("href", "https://atrium-auto-center.netlify.app/");
+    expect(screen.getAllByRole("link", { name: "Demonstrações" })).toHaveLength(
+      2,
+    );
+    for (const link of screen.getAllByRole("link", {
+      name: "Demonstrações",
+    })) {
+      expect(link).toHaveAttribute("href", "/demonstracoes");
+    }
     expect(container.querySelector('a[href^="/admin"]')).toBeNull();
   });
 
