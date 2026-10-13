@@ -41,10 +41,10 @@ export default function DemonstrationsPage() {
 
         <Section id="auto-center" background="warm" className="scroll-mt-24">
           <Container>
-            <div className="grid overflow-hidden rounded-[1.125rem] border border-navy-950/10 bg-surface-feature p-5 shadow-[var(--shadow-feature)] sm:p-8 lg:grid-cols-[0.82fr_1.18fr] lg:gap-12 lg:p-10">
-              <div className="min-w-0 lg:py-3">
+            <div className="grid overflow-hidden rounded-[1.125rem] border border-navy-950/12 bg-surface-feature p-5 shadow-[var(--shadow-feature)] sm:p-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-8 lg:p-8">
+              <div className="min-w-0 lg:py-2">
                 <Badge variant="accent">Demonstração Atrium</Badge>
-                <h2 className="mt-6 text-h2 font-semibold">
+                <h2 className="mt-6 max-w-lg text-h3 font-semibold">
                   Uma experiência digital que começa antes do WhatsApp.
                 </h2>
                 <p className="mt-6 max-w-2xl text-body-lg text-gray-text">
@@ -65,19 +65,18 @@ export default function DemonstrationsPage() {
                   <LinkButton
                     href="#interesse-auto-center"
                     variant="secondary"
-                    size="lg"
                   >
                     Quero algo assim para minha empresa
                   </LinkButton>
                 </div>
-                <p className="mt-7 border-l-2 border-accent-strong pl-5 text-body-sm text-gray-text">
+                <p className="mt-7 max-w-lg border-l border-accent-strong pl-4 text-caption text-gray-text">
                   Esta demonstração não representa uma oficina real e não envia
                   ou armazena os dados preenchidos.
                 </p>
               </div>
 
-              <div className="mt-10 min-w-0 border-t border-navy-950/10 pt-8 lg:mt-0 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-10">
-                <div className="rounded-[1rem] border border-navy-950/9 bg-surface-cloud p-3 shadow-[var(--shadow-raised)] sm:p-4">
+              <div className="mt-10 min-w-0 border-t border-navy-950/10 pt-8 lg:mt-0 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-8">
+                <div className="rounded-[1rem] border border-navy-950/10 bg-surface-cloud p-2 shadow-[var(--shadow-raised)] sm:p-3">
                   <ProjectPreview
                     src="/projects/auto-center-preview.png"
                     alt="Página inicial da demonstração Atrium para oficinas e auto centers"
@@ -94,11 +93,11 @@ export default function DemonstrationsPage() {
 
             <div className="mt-16 grid gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:items-start">
               <h3 className="text-h3 font-semibold">O que ela demonstra</h3>
-              <div className="grid gap-3 sm:grid-cols-2">
-                {demonstratedCapabilities.map((capability) => (
+              <div className="grid overflow-hidden rounded-[1rem] border border-navy-950/12 bg-surface-raised shadow-[var(--shadow-soft)] sm:grid-cols-2">
+                {demonstratedCapabilities.map((capability, index) => (
                   <p
                     key={capability}
-                    className="flex min-h-24 gap-3 rounded-xl border border-navy-950/9 bg-surface-raised p-5 text-body text-gray-text shadow-[var(--shadow-soft)]"
+                    className={`flex min-h-20 gap-3 p-5 text-body text-gray-text ${index < demonstratedCapabilities.length - 2 ? "border-b border-navy-950/10" : ""} ${index % 2 === 0 ? "sm:border-r sm:border-navy-950/10" : ""}`}
                   >
                     <span aria-hidden="true" className="mt-2 size-1.5 shrink-0 rounded-full bg-brand-blue" />
                     {capability}

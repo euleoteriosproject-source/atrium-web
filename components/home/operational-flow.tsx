@@ -1,47 +1,44 @@
-const organizationLayers = ["Regras", "Dados", "Fluxo"] as const;
+const fragmentedInputs = ["WhatsApp", "Planilha", "E-mail"] as const;
 
 export function HeroOperationalFlow() {
   return (
     <figure className="hero-flow relative mx-auto w-full max-w-2xl" aria-labelledby="hero-flow-caption">
-      <div className="absolute -inset-8 bg-[radial-gradient(circle_at_center,rgb(39_200_245_/_0.14),transparent_62%)] blur-2xl" />
-      <div className="relative overflow-hidden rounded-[1.125rem] border border-offwhite/15 bg-navy-800/72 p-4 shadow-[var(--shadow-feature)] sm:p-6">
-        <div aria-hidden="true" className="flow-grid absolute inset-0 opacity-20" />
+      <div className="absolute -inset-8 bg-[radial-gradient(circle_at_center,rgb(39_200_245_/_0.15),transparent_62%)] blur-2xl" />
+      <div className="relative min-h-96 overflow-hidden rounded-[1.125rem] border border-offwhite/16 bg-navy-800/78 p-5 shadow-[var(--shadow-feature)] sm:min-h-105 sm:p-7">
+        <div aria-hidden="true" className="flow-grid absolute inset-0 opacity-24" />
         <div className="relative flex items-center justify-between gap-4 border-b border-offwhite/12 pb-4">
-          <span className="text-eyebrow font-bold tracking-[0.14em] text-accent-on-dark uppercase">Jornada operacional</span>
-          <span className="flex items-center gap-2 text-caption text-offwhite/55"><span className="size-1.5 rounded-full bg-accent-on-dark shadow-[0_0_0_4px_rgb(39_200_245_/_0.12)]" />contexto em movimento</span>
+          <span className="text-eyebrow font-bold tracking-[0.14em] text-accent-on-dark uppercase">Informação organizada</span>
+          <span className="text-caption text-offwhite/48">do contato ao contexto</span>
         </div>
-        <div className="relative mt-5 grid gap-4 sm:grid-cols-[0.72fr_1.28fr] sm:items-center">
-          <div className="grid gap-3">
-            <div className="flow-surface rounded-xl border border-offwhite/14 bg-navy-950/72 p-4">
-              <span className="text-caption font-bold text-accent-on-dark">01</span>
-              <p className="mt-2 font-semibold text-offwhite">Intenção</p>
-              <p className="mt-1 text-caption text-offwhite/55">O que a pessoa precisa</p>
-            </div>
-            <div className="flow-surface rounded-xl border border-offwhite/14 bg-navy-950/72 p-4">
-              <span className="text-caption font-bold text-accent-on-dark">02</span>
-              <p className="mt-2 font-semibold text-offwhite">Contexto</p>
-              <p className="mt-1 text-caption text-offwhite/55">Informação relevante</p>
-            </div>
+        <div className="relative mt-6 grid min-h-64 grid-cols-[0.85fr_2.75rem_1.15fr] items-center gap-3 sm:grid-cols-[0.78fr_4rem_1.22fr] sm:gap-5">
+          <div className="space-y-3">
+            {fragmentedInputs.map((input, index) => (
+              <div
+                key={input}
+                className="flow-node motion-section rounded-xl border border-offwhite/16 bg-navy-950/76 px-3 py-3 text-caption font-semibold text-offwhite/78 shadow-[var(--shadow-soft)] transition-[border-color,transform] sm:px-4 sm:py-4 sm:text-body-sm"
+                style={{ animationDelay: `${index * 400}ms` }}
+              >
+                {input}
+              </div>
+            ))}
           </div>
-          <div className="relative">
-            <span aria-hidden="true" className="absolute top-1/2 -left-4 hidden h-px w-4 bg-brand-cyan/60 sm:block" />
-            <div className="rounded-[0.95rem] border border-brand-cyan/35 bg-offwhite p-5 text-navy-950 shadow-[var(--shadow-raised)] sm:p-6">
-              <div className="flex items-start justify-between gap-4">
-                <div><span className="text-caption font-bold text-brand-blue-deep">03</span><p className="mt-2 font-serif text-h4 font-semibold">Organização Atrium</p></div>
-                <span aria-hidden="true" className="flow-signal mt-1 size-2 rounded-full bg-brand-cyan shadow-[0_0_0_5px_rgb(39_200_245_/_0.16)]" />
-              </div>
-              <div className="mt-5 grid grid-cols-3 gap-2">
-                {organizationLayers.map((layer) => <span key={layer} className="rounded-lg border border-navy-950/10 bg-surface-cloud px-2 py-2.5 text-center text-caption font-semibold text-navy-800">{layer}</span>)}
-              </div>
-            </div>
-            <div className="relative mx-auto h-6 w-px bg-brand-cyan/60"><span aria-hidden="true" className="absolute -bottom-0.5 -left-[3px] size-2 rotate-45 border-r border-b border-brand-cyan" /></div>
-            <div className="rounded-xl border border-brand-cyan/28 bg-navy-950/86 p-4 shadow-[var(--shadow-soft)]">
-              <div className="flex items-center gap-3"><span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-brand-cyan/14 text-caption font-bold text-accent-on-dark">04</span><div><p className="font-semibold text-offwhite">Atendimento</p><p className="mt-0.5 text-caption text-offwhite/55">Humano mais preparado</p></div></div>
+          <div aria-hidden="true" className="relative h-52">
+            <span className="absolute top-1/2 left-0 h-px w-full -translate-y-1/2 bg-brand-cyan/58" />
+            <span className="flow-pulse absolute top-1/2 left-0 size-2 -translate-y-1/2 rounded-full bg-accent-on-dark shadow-[0_0_0_5px_rgb(39_200_245_/_0.12)]" />
+            <span className="absolute top-1/2 -right-0.5 size-2 -translate-y-1/2 rotate-45 border-t border-r border-brand-cyan" />
+          </div>
+          <div className="rounded-[1rem] border border-brand-cyan/34 bg-offwhite p-4 text-navy-950 shadow-[var(--shadow-raised)] sm:p-6">
+            <span className="block text-caption font-bold tracking-[0.14em] text-brand-blue-deep uppercase">Fluxo organizado</span>
+            <span className="mt-3 block font-serif text-h4 font-semibold">Informação chega ao lugar certo.</span>
+            <div className="mt-6 space-y-2.5" aria-hidden="true">
+              <span className="block h-1.5 w-full rounded-full bg-navy-950/14" />
+              <span className="block h-1.5 w-4/5 rounded-full bg-brand-blue/62" />
+              <span className="block h-1.5 w-3/5 rounded-full bg-navy-950/14" />
             </div>
           </div>
         </div>
       </div>
-      <figcaption id="hero-flow-caption" className="sr-only">Jornada que transforma intenção em contexto, passa pela organização de regras, dados e fluxo, e prepara o atendimento humano.</figcaption>
+      <figcaption id="hero-flow-caption" className="sr-only">WhatsApp, planilha e e-mail convergem em um fluxo organizado para que a informação chegue ao lugar certo.</figcaption>
     </figure>
   );
 }

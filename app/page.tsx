@@ -316,7 +316,7 @@ export default function Home() {
 
         <Section
           id="como-trabalhamos"
-          background="white"
+          background="muted"
           className="scroll-mt-20"
         >
           <Container>
@@ -328,19 +328,14 @@ export default function Home() {
               {workSteps.map((step, index) => (
                 <li
                   key={step.index}
-                  className={`relative min-h-64 rounded-[1rem] border border-navy-950/10 p-7 shadow-[var(--shadow-raised)] ${index === 1 ? "bg-surface-mist" : index === 3 ? "bg-surface-cyan" : "bg-surface-raised"}`}
+                  className="group relative min-h-64 overflow-hidden rounded-[1rem] border border-navy-950/14 bg-surface-raised p-7 shadow-[var(--shadow-project)] transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-px hover:border-brand-blue/32"
                 >
+                  <span aria-hidden="true" className={`absolute inset-x-0 top-0 h-1 ${index === 0 ? "bg-brand-blue-deep" : index === 1 ? "bg-brand-blue" : index === 2 ? "bg-brand-cyan" : "bg-navy-800"}`} />
                   <div className="flex items-center justify-between">
-                    <span className="flex size-10 items-center justify-center rounded-lg border border-brand-blue/18 bg-white text-caption font-bold text-brand-blue-deep shadow-[var(--shadow-soft)]">{step.index}</span>
-                    {index < workSteps.length - 1 ? (
-                      <span aria-hidden="true" className="text-brand-blue/55">
-                        <span className="md:hidden">↓</span>
-                        <span className="hidden md:inline">→</span>
-                      </span>
-                    ) : null}
+                    <span className="flex size-11 items-center justify-center rounded-lg border border-brand-blue/24 bg-surface-mist text-caption font-bold text-brand-blue-deep shadow-[var(--shadow-soft)]">{step.index}</span>
                   </div>
-                  <h3 className="mt-9 text-h4 font-semibold">{step.title}</h3>
-                  <p className="mt-4 max-w-xs text-body-sm text-gray-text">
+                  <h3 className="mt-9 text-h4 font-bold">{step.title}</h3>
+                  <p className="mt-4 max-w-xs text-body text-gray-text">
                     {step.description}
                   </p>
                 </li>

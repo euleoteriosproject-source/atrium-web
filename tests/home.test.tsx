@@ -116,20 +116,16 @@ describe("M2 homepage", () => {
     );
   });
 
-  it("renders the operational journey as an accessible organized flow", () => {
+  it("renders fragmented channels converging into an organized flow", () => {
     render(<Home />);
 
-    for (const concept of [
-      "Intenção",
-      "Contexto",
-      "Organização Atrium",
-      "Atendimento",
-    ]) {
+    for (const concept of ["WhatsApp", "Planilha", "E-mail"]) {
       expect(screen.getByText(concept)).toBeInTheDocument();
     }
-    expect(screen.getByText("Regras")).toBeInTheDocument();
-    expect(screen.getByText("Dados")).toBeInTheDocument();
-    expect(screen.getByText("Fluxo")).toBeInTheDocument();
+    expect(screen.getByText("Fluxo organizado")).toBeInTheDocument();
+    expect(
+      screen.getByText("Informação chega ao lugar certo."),
+    ).toBeInTheDocument();
   });
 
   it("keeps the four work steps in an ordered process", () => {

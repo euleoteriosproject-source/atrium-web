@@ -64,7 +64,7 @@ export default function SolutionsPage() {
                   >
                     <a
                       href={`#${id}`}
-                      className="motion-interactive flex min-h-44 flex-col justify-between gap-6 rounded-[1rem] border border-navy-950/10 bg-surface-raised p-5 font-semibold shadow-[var(--shadow-soft)] transition-[border-color,box-shadow,transform] hover:-translate-y-0.5 hover:border-brand-blue/35 hover:shadow-[var(--shadow-raised)] focus-visible:outline-offset-4 sm:p-6"
+                      className="motion-interactive flex min-h-44 flex-col justify-between gap-6 rounded-[1rem] border border-navy-950/15 bg-surface-raised p-5 font-semibold shadow-[var(--shadow-raised)] transition-[background-color,border-color,box-shadow,transform] hover:-translate-y-px hover:border-brand-blue/45 hover:bg-surface-mist/45 hover:shadow-[var(--shadow-project)] focus-visible:outline-offset-4 sm:p-6"
                     >
                       <span className="text-caption font-bold text-brand-blue-deep">
                         {String(index + 1).padStart(2, "0")}
@@ -88,7 +88,7 @@ export default function SolutionsPage() {
                 <article
                   key={solution.slug}
                   id={solutionAnchors[solution.slug]}
-                  className="scroll-mt-24 rounded-[1.125rem] border border-navy-950/10 bg-surface-feature p-6 shadow-[var(--shadow-raised)] sm:p-9 lg:p-11"
+                  className="scroll-mt-24 rounded-[1.125rem] border border-navy-950/14 bg-surface-feature p-6 shadow-[var(--shadow-project)] sm:p-9 lg:p-11"
                 >
                   <div className="grid gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:gap-12">
                     <div>
@@ -102,7 +102,7 @@ export default function SolutionsPage() {
                         {solution.problem}
                       </p>
                     </div>
-                    <div className="rounded-xl border border-brand-blue/12 bg-surface-mist p-6 shadow-[inset_3px_0_0_var(--color-accent-strong)] sm:p-8">
+                    <div className="flex min-h-44 flex-col justify-center rounded-xl border border-brand-blue/18 bg-surface-mist p-6 shadow-[inset_4px_0_0_var(--color-accent-strong)] sm:p-8">
                       <p className="text-caption font-bold tracking-wide text-navy-800 uppercase">
                         Resultado buscado
                       </p>
@@ -112,9 +112,9 @@ export default function SolutionsPage() {
                     </div>
                   </div>
 
-                  <div className="mt-10 grid overflow-hidden rounded-xl border border-navy-950/9 bg-surface-flat sm:grid-cols-2">
-                    <div className="p-6 sm:border-r sm:border-navy-950/9 sm:p-7">
-                      <h3 className="text-h4 font-semibold">Sinais comuns</h3>
+                  <div className="mt-10 grid overflow-hidden rounded-xl border border-navy-950/12 bg-surface-flat sm:grid-cols-2">
+                    <div className="p-6 sm:border-r sm:border-navy-950/12 sm:p-7">
+                      <h3 className="text-h4 font-bold">Sinais comuns</h3>
                       <ul className="mt-5 space-y-3 text-body text-gray-text">
                         {solution.signs.slice(0, 3).map((sign) => (
                           <li key={sign} className="flex gap-3">
@@ -129,8 +129,8 @@ export default function SolutionsPage() {
                         ))}
                       </ul>
                     </div>
-                    <div className="border-t border-navy-950/9 p-6 sm:border-t-0 sm:p-7">
-                      <h3 className="text-h4 font-semibold">Exemplos</h3>
+                    <div className="border-t border-navy-950/12 p-6 sm:border-t-0 sm:p-7">
+                      <h3 className="text-h4 font-bold">Exemplos</h3>
                       <ul className="mt-5 space-y-3 text-body text-gray-text">
                         {solution.situations.slice(0, 3).map((situation) => (
                           <li key={situation} className="flex gap-3">
@@ -145,7 +145,7 @@ export default function SolutionsPage() {
                         ))}
                       </ul>
                     </div>
-                    <div className="flex flex-col items-start gap-3 border-t border-navy-950/9 bg-white p-6 sm:col-span-2 sm:flex-row sm:flex-wrap sm:items-center sm:p-7">
+                    <div className="flex flex-col items-start gap-3 border-t border-navy-950/12 bg-white p-6 sm:col-span-2 sm:flex-row sm:flex-wrap sm:items-center sm:p-7">
                       <LinkButton href={`/solucoes/${solution.slug}`}>
                         Entender esta solução <span aria-hidden="true" className="editorial-arrow">→</span>
                       </LinkButton>
@@ -156,7 +156,7 @@ export default function SolutionsPage() {
                         Diagnóstico gratuito
                       </LinkButton>
                       {solution.slug === "sites-e-portais" ? (
-                          <TextLink href="/demonstracoes#auto-center" className="sm:ml-auto">
+                          <TextLink href="/demonstracoes#auto-center" className="inline-flex min-h-11 items-center sm:ml-auto">
                             Ver demonstração Auto Center{" "}
                             <span aria-hidden="true">→</span>
                           </TextLink>
