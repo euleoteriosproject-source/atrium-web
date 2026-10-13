@@ -26,7 +26,7 @@ export function ProjectPreview({
       target={external ? "_blank" : undefined}
       rel={external ? "noopener noreferrer" : undefined}
       className={cn(
-        "project-frame group relative block overflow-hidden rounded-[1rem] border border-navy-950/10 bg-surface-elevated shadow-[var(--shadow-project)] focus-visible:outline-offset-4",
+        "project-frame group relative block overflow-hidden rounded-[1rem] border border-navy-950/10 bg-surface-elevated shadow-[var(--shadow-raised)] transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:border-brand-blue/25 hover:shadow-[var(--shadow-project)] focus-visible:outline-offset-4",
         className,
       )}
     >

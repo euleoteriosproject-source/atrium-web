@@ -69,6 +69,10 @@ describe("M6C supporting pages", () => {
       expect(document.querySelector(`a[href="#${id}"]`)).toBeTruthy();
     }
     expect(
+      screen.getByRole("navigation", { name: "Atalhos para soluções" })
+        .querySelectorAll("a"),
+    ).toHaveLength(4);
+    expect(
       screen.getByRole("link", { name: /Ver demonstração Auto Center/i }),
     ).toHaveAttribute("href", "/demonstracoes#auto-center");
     expect(
@@ -78,6 +82,9 @@ describe("M6C supporting pages", () => {
           article.textContent?.includes("Ver demonstração Auto Center"),
         ),
     ).toHaveLength(1);
+    for (const article of screen.getAllByRole("article")) {
+      expect(article.textContent).not.toContain(" / ");
+    }
   });
 
   it("presents the Auto Center demonstration as honest commercial proof", () => {
@@ -110,6 +117,15 @@ describe("M6C supporting pages", () => {
       "src",
       expect.stringContaining("auto-center-preview.png"),
     );
+    expect(screen.getByText("O que ela demonstra")).toBeInTheDocument();
+    expect(screen.getByText("Prévia de handoff organizado")).toBeInTheDocument();
+    expect(screen.getByRole("textbox", { name: /Seu nome/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("textbox", { name: /Empresa ou negócio/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/seu nome e o nome da empresa/i),
+    ).toBeInTheDocument();
   });
 
   it.each([

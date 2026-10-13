@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { BrandMark } from "@/components/brand";
 import { DiagnosticCta } from "@/components/institutional/diagnostic-cta";
 import { InstitutionalHero } from "@/components/institutional/institutional-hero";
 import { Container } from "@/components/layout/container";
@@ -129,14 +130,10 @@ export default function AboutPage() {
 
         <Section background="dark">
           <Container className="grid gap-12 lg:grid-cols-[0.75fr_1.25fr] lg:gap-20">
-            <div className="flex min-h-80 items-end border border-offwhite/15 bg-navy-800 p-8">
-              <div>
-                <span
-                  aria-hidden="true"
-                  className="font-serif text-display text-brand-blue"
-                >
-                  VE
-                </span>
+            <div className="relative flex min-h-80 items-end overflow-hidden rounded-[1rem] border border-offwhite/15 bg-navy-800 p-8 shadow-[var(--shadow-feature)]">
+              <BrandMark decorative surface="dark" className="absolute -top-12 -right-14 h-72 w-72 opacity-20" />
+              <div className="relative">
+                <p className="text-caption font-bold tracking-[0.14em] text-accent-on-dark uppercase">Engenharia Atrium</p>
                 <p className="mt-5 text-h4 font-semibold">
                   Vinicius Euleoterio
                 </p>

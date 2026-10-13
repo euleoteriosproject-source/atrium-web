@@ -41,8 +41,8 @@ export default function DemonstrationsPage() {
 
         <Section id="auto-center" background="warm" className="scroll-mt-24">
           <Container>
-            <div className="grid items-start gap-12 lg:grid-cols-[0.78fr_1.22fr] lg:gap-16">
-              <div>
+            <div className="grid overflow-hidden rounded-[1.125rem] border border-navy-950/10 bg-surface-feature p-5 shadow-[var(--shadow-feature)] sm:p-8 lg:grid-cols-[0.82fr_1.18fr] lg:gap-12 lg:p-10">
+              <div className="min-w-0 lg:py-3">
                 <Badge variant="accent">Demonstração Atrium</Badge>
                 <h2 className="mt-6 text-h2 font-semibold">
                   Uma experiência digital que começa antes do WhatsApp.
@@ -52,7 +52,7 @@ export default function DemonstrationsPage() {
                   presença profissional com uma jornada guiada para organizar a
                   necessidade do motorista antes do atendimento.
                 </p>
-                <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
+                <div className="mt-9 flex max-w-xl flex-col items-start gap-3 xl:flex-row xl:flex-wrap xl:items-center">
                   <LinkButton
                     href="https://atrium-auto-center.netlify.app/"
                     size="lg"
@@ -76,30 +76,31 @@ export default function DemonstrationsPage() {
                 </p>
               </div>
 
-              <div>
-                <ProjectPreview
-                  src="/projects/auto-center-preview.png"
-                  alt="Página inicial da demonstração Atrium para oficinas e auto centers"
-                  href="https://atrium-auto-center.netlify.app/"
-                  priority
-                />
-                <p className="mt-5 text-caption text-gray-text">
-                  Auto Center — Atrium Conversão · experiência pública navegável
-                </p>
+              <div className="mt-10 min-w-0 border-t border-navy-950/10 pt-8 lg:mt-0 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-10">
+                <div className="rounded-[1rem] border border-navy-950/9 bg-surface-cloud p-3 shadow-[var(--shadow-raised)] sm:p-4">
+                  <ProjectPreview
+                    src="/projects/auto-center-preview.png"
+                    alt="Página inicial da demonstração Atrium para oficinas e auto centers"
+                    href="https://atrium-auto-center.netlify.app/"
+                    priority
+                    className="shadow-[var(--shadow-soft)]"
+                  />
+                  <p className="px-1 pt-4 pb-1 text-caption text-gray-text">
+                    Auto Center — Atrium Conversão · experiência pública navegável
+                  </p>
+                </div>
               </div>
             </div>
 
-            <div className="mt-16 grid gap-8 border-t border-navy-950/12 pt-10 lg:grid-cols-[0.72fr_1.28fr]">
+            <div className="mt-16 grid gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:items-start">
               <h3 className="text-h3 font-semibold">O que ela demonstra</h3>
-              <div className="grid gap-x-10 gap-y-4 sm:grid-cols-2">
+              <div className="grid gap-3 sm:grid-cols-2">
                 {demonstratedCapabilities.map((capability) => (
                   <p
                     key={capability}
-                    className="flex gap-3 border-b border-navy-950/10 pb-4 text-body text-gray-text"
+                    className="flex min-h-24 gap-3 rounded-xl border border-navy-950/9 bg-surface-raised p-5 text-body text-gray-text shadow-[var(--shadow-soft)]"
                   >
-                    <span aria-hidden="true" className="text-brand-blue">
-                      +
-                    </span>
+                    <span aria-hidden="true" className="mt-2 size-1.5 shrink-0 rounded-full bg-brand-blue" />
                     {capability}
                   </p>
                 ))}

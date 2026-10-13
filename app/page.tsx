@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { BrandMark } from "@/components/brand";
 import { Faq } from "@/components/home/faq";
 import { ManualWorkCalculator } from "@/components/home/manual-work-calculator";
 import {
@@ -41,22 +42,18 @@ export default function Home() {
         <Section
           background="dark"
           spacing="spacious"
-          className="relative overflow-hidden pb-32 sm:pb-40 lg:pb-48"
+          className="relative overflow-hidden pb-28 sm:pb-32 lg:py-32"
         >
           <div
             aria-hidden="true"
             className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent-on-dark/70 to-transparent"
           />
-          <div
-            aria-hidden="true"
-            className="absolute -right-40 -bottom-72 size-[36rem] rounded-full border border-brand-cyan/10"
-          />
-          <Container className="relative grid items-center gap-16 lg:grid-cols-[1.08fr_0.92fr] lg:gap-20">
+          <Container className="relative grid items-center gap-14 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
             <div>
               <Eyebrow tone="dark">
                 Software, automação e IA aplicada à operação.
               </Eyebrow>
-              <h1 className="mt-7 max-w-4xl text-display font-semibold">
+              <h1 className="mt-7 max-w-3xl text-h1 font-semibold">
                 Sua empresa pode trabalhar melhor.
               </h1>
               <p className="mt-8 max-w-2xl text-body-lg text-offwhite/72">
@@ -99,7 +96,7 @@ export default function Home() {
               </p>
             </div>
 
-            <article className="mt-14 grid items-center gap-10 lg:grid-cols-[1.25fr_0.75fr] lg:gap-16">
+            <article className="mt-14 grid items-center gap-10 rounded-[1.125rem] border border-navy-950/10 bg-surface-feature p-5 shadow-[var(--shadow-raised)] sm:p-8 lg:grid-cols-[1.25fr_0.75fr] lg:gap-14">
               <ProjectPreview
                 src="/projects/cred-marvi-preview.png"
                 alt="Página inicial publicada da Cred Marvi, com jornada de soluções de crédito e atendimento humano"
@@ -138,7 +135,7 @@ export default function Home() {
               </div>
             </article>
 
-            <article className="mt-20 grid items-center gap-9 border-t border-navy-950/12 pt-14 lg:grid-cols-[0.72fr_1.28fr] lg:gap-16">
+            <article className="mt-8 grid items-center gap-9 rounded-[1.125rem] border border-navy-950/10 bg-surface-raised p-5 shadow-[var(--shadow-soft)] sm:p-8 lg:grid-cols-[0.72fr_1.28fr] lg:gap-14">
               <div>
                 <p className="text-eyebrow font-bold tracking-[0.14em] text-brand-blue-deep uppercase">
                   Demonstração Atrium
@@ -176,11 +173,11 @@ export default function Home() {
               title="O trabalho invisível também custa tempo."
               description="Pequenos atritos repetidos todos os dias viram horas de trabalho, atrasos, erros e oportunidades perdidas."
             />
-            <ol className="border-t border-navy-950/14">
+            <ol className="overflow-hidden rounded-[1rem] border border-navy-950/10 bg-surface-raised px-5 shadow-[var(--shadow-soft)] sm:px-7">
               {painPoints.slice(0, 5).map((pain, index) => (
                 <li
                   key={pain}
-                  className="grid grid-cols-[3rem_1fr] gap-4 border-b border-navy-950/12 py-5 sm:grid-cols-[4rem_1fr] sm:py-6"
+                  className="grid grid-cols-[3rem_1fr] gap-4 border-b border-navy-950/10 py-5 last:border-b-0 sm:grid-cols-[4rem_1fr] sm:py-6"
                 >
                   <span className="text-caption font-bold text-brand-blue-deep">
                     {String(index + 1).padStart(2, "0")}
@@ -246,11 +243,11 @@ export default function Home() {
               eyebrow="Soluções Atrium"
               title="A solução depende do problema — não do nosso catálogo."
             />
-            <div className="mt-14 border-t border-navy-950/15">
+            <div className="mt-14 grid gap-4">
               {solutionPillars.map((solution, index) => (
                 <article
                   key={solution.title}
-                  className={`group grid gap-6 border-b border-navy-950/15 py-9 sm:py-11 lg:grid-cols-[4rem_1.1fr_0.9fr_auto] lg:items-start lg:gap-8 ${index % 2 === 1 ? "lg:pl-10" : ""}`}
+                  className={`group grid gap-6 rounded-[1rem] border border-navy-950/10 bg-surface-raised p-6 shadow-[var(--shadow-soft)] transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:border-brand-blue/30 hover:shadow-[var(--shadow-raised)] sm:p-8 lg:grid-cols-[4rem_1.1fr_0.9fr_auto] lg:items-start lg:gap-8 ${index % 2 === 1 ? "lg:ml-8" : "lg:mr-8"}`}
                 >
                   <span className="text-caption font-bold text-brand-blue-deep">
                     {solution.index}
@@ -327,18 +324,23 @@ export default function Home() {
               eyebrow="Como trabalhamos"
               title="Começar pequeno, provar valor e escalar com controle."
             />
-            <ol className="relative mt-16 grid gap-0 border-l border-navy-950/16 md:grid-cols-4 md:border-t md:border-l-0">
-              {workSteps.map((step) => (
+            <ol className="relative mt-16 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+              {workSteps.map((step, index) => (
                 <li
                   key={step.index}
-                  className="relative border-b border-navy-950/12 py-7 pl-8 last:border-b-0 md:border-r md:border-b-0 md:px-7 md:pt-11 md:pb-3 md:last:border-r-0"
+                  className={`relative min-h-64 rounded-[1rem] border border-navy-950/10 p-7 shadow-[var(--shadow-raised)] ${index === 1 ? "bg-surface-mist" : index === 3 ? "bg-surface-cyan" : "bg-surface-raised"}`}
                 >
-                  <span className="absolute top-8 -left-1.5 size-3 rounded-full border-2 border-white bg-brand-blue md:-top-1.5 md:left-7" />
-                  <span className="text-caption font-bold text-brand-blue-deep">
-                    {step.index}
-                  </span>
-                  <h3 className="mt-5 text-h4 font-semibold">{step.title}</h3>
-                  <p className="mt-4 text-body-sm text-gray-text">
+                  <div className="flex items-center justify-between">
+                    <span className="flex size-10 items-center justify-center rounded-lg border border-brand-blue/18 bg-white text-caption font-bold text-brand-blue-deep shadow-[var(--shadow-soft)]">{step.index}</span>
+                    {index < workSteps.length - 1 ? (
+                      <span aria-hidden="true" className="text-brand-blue/55">
+                        <span className="md:hidden">↓</span>
+                        <span className="hidden md:inline">→</span>
+                      </span>
+                    ) : null}
+                  </div>
+                  <h3 className="mt-9 text-h4 font-semibold">{step.title}</h3>
+                  <p className="mt-4 max-w-xs text-body-sm text-gray-text">
                     {step.description}
                   </p>
                 </li>
@@ -383,14 +385,10 @@ export default function Home() {
         <Section id="sobre" background="white" className="scroll-mt-20">
           <Container>
             <div className="grid gap-12 lg:grid-cols-[0.68fr_1.32fr] lg:gap-20">
-              <div className="flex min-h-80 items-end rounded-[1rem] bg-navy-950 p-7 text-offwhite shadow-[var(--shadow-project)] sm:p-9">
-                <div>
-                  <span
-                    aria-hidden="true"
-                    className="font-serif text-display text-accent-on-dark"
-                  >
-                    VE
-                  </span>
+              <div className="relative flex min-h-80 items-end overflow-hidden rounded-[1rem] border border-navy-950/10 bg-navy-950 p-7 text-offwhite shadow-[var(--shadow-feature)] sm:p-9">
+                <BrandMark decorative surface="dark" className="absolute -top-10 -right-12 h-64 w-64 opacity-18" />
+                <div className="relative">
+                  <p className="text-caption font-bold tracking-[0.14em] text-accent-on-dark uppercase">Engenharia Atrium</p>
                   <p className="mt-5 text-h4 font-semibold">
                     Vinicius Euleoterio
                   </p>

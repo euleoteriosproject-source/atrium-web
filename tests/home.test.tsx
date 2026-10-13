@@ -115,4 +115,36 @@ describe("M2 homepage", () => {
       expect.stringContaining("auto-center-preview.png"),
     );
   });
+
+  it("renders the operational journey as an accessible organized flow", () => {
+    render(<Home />);
+
+    for (const concept of [
+      "Intenção",
+      "Contexto",
+      "Organização Atrium",
+      "Atendimento",
+    ]) {
+      expect(screen.getByText(concept)).toBeInTheDocument();
+    }
+    expect(screen.getByText("Regras")).toBeInTheDocument();
+    expect(screen.getByText("Dados")).toBeInTheDocument();
+    expect(screen.getByText("Fluxo")).toBeInTheDocument();
+  });
+
+  it("keeps the four work steps in an ordered process", () => {
+    const { container } = render(<Home />);
+    const process = container.querySelector("#como-trabalhamos ol");
+
+    expect(process).toBeInTheDocument();
+    expect(process?.querySelectorAll(":scope > li")).toHaveLength(4);
+    for (const title of [
+      "Entendemos",
+      "Desenhamos",
+      "Construímos",
+      "Evoluímos",
+    ]) {
+      expect(screen.getByRole("heading", { name: title })).toBeInTheDocument();
+    }
+  });
 });
