@@ -128,6 +128,38 @@ describe("M2 homepage", () => {
     ).toBeInTheDocument();
   });
 
+  it("renders the operational signals and shared founder proof", () => {
+    render(<Home />);
+
+    for (const pain of [
+      "Minha equipe vive atualizando planilhas.",
+      "Tudo acaba no WhatsApp.",
+      "Copiamos informações entre ferramentas.",
+      "Respondemos sempre as mesmas perguntas.",
+      "Leads demoram para receber retorno.",
+    ]) {
+      expect(screen.getByText(`“${pain}”`)).toBeInTheDocument();
+    }
+
+    const founderImage = screen.getByAltText(
+      "Retrato de Vinicius Euleoterio, fundador da Atrium",
+    );
+    expect(decodeURIComponent(founderImage.getAttribute("src") ?? "")).toContain(
+      "/people/vinicius-euleoterio.jpg",
+    );
+    expect(screen.getByText("Vinicius Euleoterio")).toBeInTheDocument();
+    expect(screen.getByText("Founder & Software Engineer")).toBeInTheDocument();
+
+    for (const signal of [
+      "8+ anos",
+      "Backend & arquitetura",
+      "Sistemas críticos",
+      "Tecnologia aplicada",
+    ]) {
+      expect(screen.getByText(signal)).toBeInTheDocument();
+    }
+  });
+
   it("keeps the four work steps in an ordered process", () => {
     const { container } = render(<Home />);
     const process = container.querySelector("#como-trabalhamos ol");

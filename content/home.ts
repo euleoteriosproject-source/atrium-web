@@ -125,13 +125,6 @@ export const trustPrinciples = [
   },
 ] as const;
 
-export const founderSignals = [
-  ["8+ anos", "Engenharia de software"],
-  ["Sistemas críticos", "Experiência em ambientes de alta responsabilidade"],
-  ["Backend & arquitetura", "APIs, integrações e sistemas distribuídos"],
-  ["Tecnologia aplicada", "Solução antes de ferramenta"],
-] as const;
-
 export const faqItems = [
   {
     question: "Quanto custa desenvolver uma solução?",

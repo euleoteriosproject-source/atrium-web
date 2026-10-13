@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
-import { BrandMark } from "@/components/brand";
+import { FounderProfileCard } from "@/components/founder/founder-profile-card";
+import { FounderSignals } from "@/components/founder/founder-signals";
 import { Faq } from "@/components/home/faq";
 import { ManualWorkCalculator } from "@/components/home/manual-work-calculator";
 import {
@@ -17,8 +18,8 @@ import { Eyebrow } from "@/components/ui/eyebrow";
 import { LinkButton } from "@/components/ui/link-button";
 import { SectionHeader } from "@/components/ui/section-header";
 import { TextLink } from "@/components/ui/text-link";
+import { founderExperience } from "@/content/founder";
 import {
-  founderSignals,
   painPoints,
   solutionPillars,
   trustPrinciples,
@@ -183,18 +184,42 @@ export default function Home() {
               title="O trabalho invisível também custa tempo."
               description="Pequenos atritos repetidos todos os dias viram horas de trabalho, atrasos, erros e oportunidades perdidas."
             />
-            <ol className="overflow-hidden rounded-[1rem] border border-navy-950/10 bg-surface-raised px-5 shadow-[var(--shadow-soft)] sm:px-7">
+            <ol className="grid gap-3 rounded-[1.125rem] border border-navy-950/10 bg-surface-cloud/55 p-3 shadow-[var(--shadow-raised)] sm:grid-cols-2 sm:p-4">
               {painPoints.slice(0, 5).map((pain, index) => (
                 <li
                   key={pain}
-                  className="grid grid-cols-[3rem_1fr] gap-4 border-b border-navy-950/10 py-5 last:border-b-0 sm:grid-cols-[4rem_1fr] sm:py-6"
+                  className={`relative min-h-36 overflow-hidden rounded-[0.875rem] border p-5 shadow-[var(--shadow-soft)] sm:p-6 ${
+                    index === 0
+                      ? "border-brand-blue/22 bg-navy-950 text-offwhite sm:col-span-2 sm:min-h-40"
+                      : index % 2 === 0
+                        ? "border-navy-950/10 bg-surface-mist"
+                        : "border-navy-950/10 bg-surface-raised"
+                  }`}
                 >
-                  <span className="text-caption font-bold text-brand-blue-deep">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <blockquote className="max-w-xl text-body font-semibold">
-                    “{pain}”
-                  </blockquote>
+                  <span
+                    aria-hidden="true"
+                    className={`absolute inset-x-0 top-0 h-1 ${
+                      index === 0 ? "bg-brand-cyan" : "bg-brand-blue/55"
+                    }`}
+                  />
+                  <div className="flex h-full flex-col justify-between gap-7">
+                    <span
+                      className={`text-caption font-bold ${
+                        index === 0
+                          ? "text-accent-on-dark"
+                          : "text-brand-blue-deep"
+                      }`}
+                    >
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <blockquote
+                      className={`max-w-xl font-serif text-h4 ${
+                        index === 0 ? "text-offwhite" : "text-navy-950"
+                      }`}
+                    >
+                      “{pain}”
+                    </blockquote>
+                  </div>
                 </li>
               ))}
             </ol>
@@ -389,44 +414,22 @@ export default function Home() {
 
         <Section id="sobre" background="white" className="scroll-mt-20">
           <Container>
-            <div className="grid gap-12 lg:grid-cols-[0.68fr_1.32fr] lg:gap-20">
-              <div className="relative flex min-h-80 items-end overflow-hidden rounded-[1rem] border border-navy-950/10 bg-navy-950 p-7 text-offwhite shadow-[var(--shadow-feature)] sm:p-9">
-                <BrandMark decorative surface="dark" className="absolute -top-10 -right-12 h-64 w-64 opacity-18" />
-                <div className="relative">
-                  <p className="text-caption font-bold tracking-[0.14em] text-accent-on-dark uppercase">Engenharia Atrium</p>
-                  <p className="mt-5 text-h4 font-semibold">
-                    Vinicius Euleoterio
-                  </p>
-                  <p className="mt-1 text-body-sm text-offwhite/65">
-                    Founder & Software Engineer
-                  </p>
-                </div>
-              </div>
+            <div className="grid items-center gap-12 lg:grid-cols-[0.76fr_1.24fr] lg:gap-20">
+              <FounderProfileCard />
               <div>
                 <Eyebrow>Experiência</Eyebrow>
                 <h2 className="mt-5 text-h2 font-semibold">
                   Tecnologia séria precisa de experiência por trás.
                 </h2>
                 <p className="mt-6 text-body-lg text-gray-text">
-                  Mais de 8 anos de experiência em engenharia de software,
-                  desenvolvimento backend, integrações e sistemas para ambientes
-                  de alta criticidade, incluindo o setor financeiro.
+                  {founderExperience.home}
                 </p>
                 <p className="mt-5 text-body text-gray-text">
-                  A Atrium nasce da experiência de construir tecnologia que
-                  precisa funcionar no mundo real — com segurança, manutenção,
-                  integração e responsabilidade.
+                  {founderExperience.foundation}
                 </p>
-                <dl className="mt-9 grid gap-x-8 gap-y-6 border-t border-navy-950/12 pt-7 sm:grid-cols-2">
-                  {founderSignals.map(([term, description]) => (
-                    <div key={term}>
-                      <dt className="font-semibold">{term}</dt>
-                      <dd className="mt-1 text-body-sm text-gray-text">
-                        {description}
-                      </dd>
-                    </div>
-                  ))}
-                </dl>
+                <div className="mt-9">
+                  <FounderSignals />
+                </div>
               </div>
             </div>
           </Container>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
-import { BrandMark } from "@/components/brand";
+import { FounderProfileCard } from "@/components/founder/founder-profile-card";
+import { FounderSignals } from "@/components/founder/founder-signals";
 import { DiagnosticCta } from "@/components/institutional/diagnostic-cta";
 import { InstitutionalHero } from "@/components/institutional/institutional-hero";
 import { Container } from "@/components/layout/container";
@@ -8,6 +9,7 @@ import { Footer } from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar";
 import { Section } from "@/components/layout/section";
 import { SectionHeader } from "@/components/ui/section-header";
+import { founderExperience } from "@/content/founder";
 
 export const metadata: Metadata = {
   title: "Sobre",
@@ -109,16 +111,30 @@ export default function AboutPage() {
               eyebrow="Princípios"
               title="Como escolhemos construir"
             />
-            <dl className="mt-12 grid border-t border-l border-navy-950/12 sm:grid-cols-2 lg:grid-cols-3">
+            <dl className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {principles.map(([term, description], index) => (
                 <div
                   key={term}
-                  className="min-h-52 border-r border-b border-navy-950/12 p-7"
+                  className={`relative min-h-56 overflow-hidden rounded-[1rem] border p-7 shadow-[var(--shadow-soft)] ${
+                    index === 0 || index === 4
+                      ? "border-brand-blue/20 bg-surface-mist"
+                      : "border-navy-950/10 bg-surface-raised"
+                  }`}
                 >
-                  <span className="text-caption font-bold text-gray-text">
+                  <span
+                    aria-hidden="true"
+                    className={`absolute inset-x-0 top-0 h-1 ${
+                      index % 3 === 0
+                        ? "bg-brand-blue-deep"
+                        : index % 3 === 1
+                          ? "bg-brand-cyan"
+                          : "bg-navy-800"
+                    }`}
+                  />
+                  <span className="flex size-10 items-center justify-center rounded-lg border border-brand-blue/18 bg-surface-raised text-caption font-bold text-brand-blue-deep shadow-[var(--shadow-soft)]">
                     {String(index + 1).padStart(2, "0")}
                   </span>
-                  <dt className="mt-7 text-h4 font-semibold">{term}</dt>
+                  <dt className="mt-8 text-h4 font-semibold">{term}</dt>
                   <dd className="mt-4 text-body-sm text-gray-text">
                     {description}
                   </dd>
@@ -129,19 +145,8 @@ export default function AboutPage() {
         </Section>
 
         <Section background="dark">
-          <Container className="grid gap-12 lg:grid-cols-[0.75fr_1.25fr] lg:gap-20">
-            <div className="relative flex min-h-80 items-end overflow-hidden rounded-[1rem] border border-offwhite/15 bg-navy-800 p-8 shadow-[var(--shadow-feature)]">
-              <BrandMark decorative surface="dark" className="absolute -top-12 -right-14 h-72 w-72 opacity-20" />
-              <div className="relative">
-                <p className="text-caption font-bold tracking-[0.14em] text-accent-on-dark uppercase">Engenharia Atrium</p>
-                <p className="mt-5 text-h4 font-semibold">
-                  Vinicius Euleoterio
-                </p>
-                <p className="mt-1 text-body-sm text-offwhite/65">
-                  Founder & Software Engineer
-                </p>
-              </div>
-            </div>
+          <Container className="grid items-center gap-12 lg:grid-cols-[0.76fr_1.24fr] lg:gap-20">
+            <FounderProfileCard tone="dark" />
             <div>
               <SectionHeader
                 eyebrow="Experiência por trás"
@@ -149,16 +154,14 @@ export default function AboutPage() {
                 className="[&_h2]:text-offwhite"
               />
               <div className="mt-6 space-y-5 text-body-lg text-offwhite/70">
+                <p>{founderExperience.about}</p>
                 <p>
-                  Mais de 8 anos de experiência em engenharia de software,
-                  backend, integrações e sistemas para ambientes de alta
-                  criticidade, incluindo o setor financeiro.
+                  {founderExperience.foundation} Essa experiência orienta a
+                  empresa sem transformá-la em um currículo pessoal.
                 </p>
-                <p>
-                  Essa experiência orienta a Atrium a tratar manutenção,
-                  segurança, integração e responsabilidade como parte da entrega
-                  — sem transformar a empresa em um currículo pessoal.
-                </p>
+              </div>
+              <div className="mt-9">
+                <FounderSignals tone="dark" />
               </div>
             </div>
           </Container>
