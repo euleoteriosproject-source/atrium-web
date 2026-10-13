@@ -48,8 +48,8 @@ export default function Home() {
             aria-hidden="true"
             className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent-on-dark/70 to-transparent"
           />
-          <Container className="relative grid items-center gap-14 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
-            <div>
+          <Container className="relative grid grid-cols-1 items-center gap-14 lg:grid-cols-2 lg:gap-20 xl:gap-24">
+            <div className="min-w-0">
               <Eyebrow tone="dark">
                 Software, automação e IA aplicada à operação.
               </Eyebrow>
@@ -61,14 +61,24 @@ export default function Home() {
                 oportunidades perdidas em soluções digitais que ajudam sua
                 empresa a operar melhor e crescer.
               </p>
-              <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
-                <LinkButton href="/diagnostico" variant="accent" size="lg">
+              <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center lg:flex-col lg:items-start xl:flex-row xl:items-center">
+                <LinkButton
+                  href="/diagnostico"
+                  variant="accent"
+                  size="lg"
+                  className="w-full sm:w-auto"
+                >
                   Descobrir oportunidades
                   <span aria-hidden="true" className="editorial-arrow">
                     →
                   </span>
                 </LinkButton>
-                <LinkButton href="/contato" variant="outlineDark" size="lg">
+                <LinkButton
+                  href="/contato"
+                  variant="outlineDark"
+                  size="lg"
+                  className="w-full sm:w-auto"
+                >
                   Tenho um projeto em mente
                 </LinkButton>
               </div>
