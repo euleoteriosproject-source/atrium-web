@@ -6,6 +6,7 @@ import { Container } from "@/components/layout/container";
 import { Footer } from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar";
 import { Section } from "@/components/layout/section";
+import { LinkButton } from "@/components/ui/link-button";
 import { SectionHeader } from "@/components/ui/section-header";
 
 export const metadata: Metadata = {
@@ -200,6 +201,15 @@ export default function CredMarviCasePage() {
               e das necessidades observadas — não de uma expansão automática de
               escopo.
             </p>
+            <LinkButton
+              href="https://credmarvi.netlify.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              variant="secondary"
+              className="mt-8"
+            >
+              Ver site da Cred Marvi <span aria-hidden="true">↗</span>
+            </LinkButton>
           </Container>
         </Section>
 

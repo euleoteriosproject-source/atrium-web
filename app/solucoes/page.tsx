@@ -6,6 +6,7 @@ import { Container } from "@/components/layout/container";
 import { Footer } from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar";
 import { Section } from "@/components/layout/section";
+import { Eyebrow } from "@/components/ui/eyebrow";
 import { TextLink } from "@/components/ui/text-link";
 import { solutions } from "@/content/solutions";
 import { buildDiagnosticHref } from "@/domain/diagnostic/preselection";
@@ -17,6 +18,20 @@ export const metadata: Metadata = {
   alternates: { canonical: "/solucoes" },
 };
 
+const solutionAnchors = {
+  "sites-e-portais": "sites-e-experiencias",
+  "automacoes-e-integracoes": "automacoes-e-integracoes",
+  "sistemas-sob-medida": "sistemas-sob-medida",
+  "ia-aplicada": "ia-aplicada",
+} as const;
+
+const scenarios = [
+  ["Quero melhorar minha presença digital", "sites-e-experiencias"],
+  ["Quero reduzir trabalho manual", "automacoes-e-integracoes"],
+  ["Preciso organizar melhor um processo", "sistemas-sob-medida"],
+  ["Quero avaliar onde IA faz sentido", "ia-aplicada"],
+] as const;
+
 export default function SolutionsPage() {
   return (
     <div className="min-h-screen bg-offwhite">
@@ -24,13 +39,46 @@ export default function SolutionsPage() {
       <main id="conteudo">
         <InstitutionalHero
           eyebrow="Soluções Atrium"
-          title="Não vendemos tecnologia isolada. Combinamos o necessário para resolver o problema."
-          description="A forma da solução depende da operação: às vezes uma jornada digital, uma integração ou uma automação resolve. Em outros casos, faz sentido construir software ou aplicar IA com controles claros."
+          title="Tecnologia certa para o problema certo."
+          description="Sites, automações, sistemas e IA entram quando ajudam a resolver uma necessidade real — e na medida certa para a operação."
           primaryHref="/diagnostico"
           primaryLabel="Diagnóstico gratuito"
           secondaryHref="/contato"
           secondaryLabel="Conversar sobre uma ideia"
+          compact
         />
+
+        <Section background="muted" spacing="compact">
+          <Container>
+            <Eyebrow>Encontre seu cenário</Eyebrow>
+            <h2 className="mt-4 text-h3 font-semibold">
+              O que você quer melhorar primeiro?
+            </h2>
+            <nav aria-label="Atalhos para soluções" className="mt-8">
+              <ul className="grid border-t border-l border-navy-950/15 sm:grid-cols-2 lg:grid-cols-4">
+                {scenarios.map(([label, id], index) => (
+                  <li
+                    key={id}
+                    className="border-r border-b border-navy-950/15 bg-offwhite"
+                  >
+                    <a
+                      href={`#${id}`}
+                      className="motion-interactive flex min-h-36 flex-col justify-between gap-6 p-5 font-semibold transition-colors hover:bg-navy-950 hover:text-offwhite sm:p-6"
+                    >
+                      <span className="text-caption text-gray-text">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      <span className="flex items-end justify-between gap-4 text-body">
+                        {label}
+                        <span aria-hidden="true">↓</span>
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </Container>
+        </Section>
 
         <Section>
           <Container>
@@ -38,20 +86,32 @@ export default function SolutionsPage() {
               {solutions.map((solution) => (
                 <article
                   key={solution.slug}
-                  className="grid gap-8 border-t border-navy-950/15 py-10 first:border-t-0 first:pt-0 lg:grid-cols-[0.55fr_1.45fr] lg:gap-16"
+                  id={solutionAnchors[solution.slug]}
+                  className="scroll-mt-24 border-t border-navy-950/15 py-12 first:border-t-0 first:pt-0"
                 >
-                  <div>
-                    <span className="text-caption font-bold text-gray-text">
-                      {solution.index}
-                    </span>
-                    <h2 className="mt-4 text-h3 font-semibold">
-                      {solution.eyebrow}
-                    </h2>
-                    <p className="mt-4 text-body text-gray-text">
-                      {solution.problem}
-                    </p>
+                  <div className="grid gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:gap-16">
+                    <div>
+                      <span className="text-caption font-bold text-gray-text">
+                        {solution.index}
+                      </span>
+                      <h2 className="mt-4 text-h3 font-semibold">
+                        {solution.eyebrow}
+                      </h2>
+                      <p className="mt-5 text-body text-gray-text">
+                        {solution.problem}
+                      </p>
+                    </div>
+                    <div className="border-l-2 border-accent-strong bg-gray-bg p-6 sm:p-8">
+                      <p className="text-caption font-bold tracking-wide text-navy-800 uppercase">
+                        Resultado buscado
+                      </p>
+                      <p className="mt-4 max-w-3xl text-body-lg font-semibold text-navy-950">
+                        {solution.outcome}
+                      </p>
+                    </div>
                   </div>
-                  <div className="grid gap-8 sm:grid-cols-2">
+
+                  <div className="mt-9 grid gap-8 sm:grid-cols-2 lg:ml-[calc(36%+2rem)]">
                     <div>
                       <h3 className="text-h4 font-semibold">Sinais comuns</h3>
                       <ul className="mt-5 space-y-3 text-body text-gray-text">
@@ -84,15 +144,7 @@ export default function SolutionsPage() {
                         ))}
                       </ul>
                     </div>
-                    <div className="border-l border-accent-strong/60 pl-5 sm:col-span-2">
-                      <p className="text-caption font-bold tracking-wide text-navy-800 uppercase">
-                        Resultado buscado
-                      </p>
-                      <p className="mt-3 max-w-3xl text-body font-semibold">
-                        {solution.outcome}
-                      </p>
-                    </div>
-                    <div className="flex flex-col gap-4 sm:col-span-2 sm:flex-row sm:items-center">
+                    <div className="flex flex-col gap-4 border-t border-navy-950/12 pt-6 sm:col-span-2 sm:flex-row sm:flex-wrap sm:items-center">
                       <TextLink href={`/solucoes/${solution.slug}`}>
                         Entender esta solução <span aria-hidden="true">→</span>
                       </TextLink>
@@ -107,6 +159,20 @@ export default function SolutionsPage() {
                       >
                         Diagnóstico gratuito
                       </TextLink>
+                      {solution.slug === "sites-e-portais" ? (
+                        <>
+                          <span
+                            aria-hidden="true"
+                            className="hidden text-navy-950/25 sm:block"
+                          >
+                            /
+                          </span>
+                          <TextLink href="/demonstracoes#auto-center">
+                            Ver demonstração Auto Center{" "}
+                            <span aria-hidden="true">→</span>
+                          </TextLink>
+                        </>
+                      ) : null}
                     </div>
                   </div>
                 </article>

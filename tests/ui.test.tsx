@@ -99,6 +99,7 @@ describe("MobileMenu", () => {
     ).toBeInTheDocument();
     for (const label of [
       "Soluções",
+      "Demonstrações",
       "Como trabalhamos",
       "Case",
       "Sobre",
@@ -106,6 +107,10 @@ describe("MobileMenu", () => {
     ]) {
       expect(screen.getByRole("link", { name: label })).toBeInTheDocument();
     }
+    expect(screen.getByRole("link", { name: "Demonstrações" })).toHaveAttribute(
+      "href",
+      "/demonstracoes",
+    );
 
     fireEvent.click(closeTrigger);
     expect(screen.getByRole("button", { name: "Abrir menu" })).toHaveAttribute(
