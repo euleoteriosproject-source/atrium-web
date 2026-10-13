@@ -326,6 +326,8 @@ The site must never calculate or promise a project price.
 Atrium should feel:
 
 - modern;
+- technological;
+- SaaS-ready;
 - serious;
 - elegant;
 - trustworthy;
@@ -338,16 +340,18 @@ Atrium should feel:
 ## 6.2 Color tokens
 
 ```text
-navy-950:   #0B1320
-navy-800:   #182638
-gold-500:   #D4AF37
-gold-300:   #E5C96A
-offwhite:   #F8F7F3
-gray-bg:    #F2F3F5
-gray-text:  #566171
+brand-navy:       #071832
+brand-blue:       #1677FF
+brand-blue-deep:  #1757E8
+brand-cyan:       #27C8F5
+brand-off-white:  #F8F9FC
+gray-bg:          #F2F3F5
+gray-text:        #566171
 ```
 
-Gold is an accent, not a background default.
+The canonical brand gradient is `#27C8F5 -> #1677FF -> #1757E8`.
+
+Blue and cyan are the official brand accents. The former gold system must not remain as a competing accent. Product components must consume semantic accent, focus, link, selection and on-dark tokens instead of coupling behavior to a raw brand color.
 
 ## 6.3 Visual anti-patterns
 
@@ -415,6 +419,43 @@ Typical durations:
 Respect `prefers-reduced-motion`.
 
 No animation should delay conversion or content comprehension.
+
+## 6.8 Official mark and brand assets
+
+The official Atrium mark is a stylized ribbon-like `A`, crossed by a forward arch that completes the letterform. Its geometry follows the approved September 2026 reference and must not be replaced by a generic letter `A`.
+
+The horizontal logo combines the official mark with the geometric `ATRIUM` wordmark. The wordmark is represented as stable vector geometry and does not depend on a remote font.
+
+Canonical reusable assets:
+
+```text
+public/brand/atrium-logo-horizontal-on-dark.svg
+public/brand/atrium-logo-horizontal-on-light.svg
+public/brand/atrium-mark-on-dark.svg
+public/brand/atrium-mark-on-light.svg
+public/brand/external/atrium-whatsapp-avatar-1024.png
+```
+
+Application metadata assets:
+
+```text
+app/favicon.ico
+app/icon.svg
+app/apple-icon.png
+app/opengraph-image.png
+```
+
+Application rules:
+
+- use the horizontal `on-light` logo on off-white or similarly light surfaces;
+- use the horizontal `on-dark` logo on navy or similarly dark surfaces;
+- use the isolated mark only where the horizontal lockup is not appropriate, such as favicons and square avatars;
+- keep the mark gradient and wordmark contrast intact;
+- do not recolor the mark with the retired gold palette;
+- preserve clear space and do not distort the SVG aspect ratio;
+- keep the SVG decorative when a surrounding link already provides the accessible name;
+- use a navy, symbol-only, wide-safe-area square asset for WhatsApp Business;
+- use the navy Open Graph composition with the official mark and wordmark, without invented slogans.
 
 ---
 

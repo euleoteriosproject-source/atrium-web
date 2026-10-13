@@ -118,7 +118,7 @@ export function WhatsAppHandoff() {
           </h1>
 
           {state.handoff.persisted && state.handoff.publicCode ? (
-            <div className="mt-8 border-l-2 border-gold-500 bg-white px-6 py-5">
+            <div className="mt-8 border-l-2 border-accent-strong bg-white px-6 py-5">
               <p className="text-caption font-bold tracking-wide text-gray-text uppercase">
                 Código do diagnóstico
               </p>
@@ -129,7 +129,7 @@ export function WhatsAppHandoff() {
           ) : (
             <p
               role="status"
-              className="mt-8 border-l-2 border-gold-500 bg-white px-6 py-5 text-body text-navy-800"
+              className="mt-8 border-l-2 border-accent-strong bg-white px-6 py-5 text-body text-navy-800"
             >
               Não conseguimos registrar seu diagnóstico agora, mas você ainda
               pode continuar a conversa pelo WhatsApp.
@@ -172,7 +172,7 @@ export function WhatsAppHandoff() {
               Você também pode{" "}
               <a
                 href="/contato"
-                className="font-semibold text-navy-950 underline decoration-gold-500 decoration-2 underline-offset-4"
+                className="font-semibold text-navy-950 underline decoration-link-decoration decoration-2 underline-offset-4"
               >
                 tentar registrar novamente
               </a>

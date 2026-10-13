@@ -5,11 +5,11 @@ import { cn } from "@/lib/utils";
 
 const variants = {
   inline:
-    "text-navy-950 underline decoration-gold-500 decoration-2 underline-offset-4 hover:decoration-gold-300",
+    "text-navy-950 underline decoration-link-decoration decoration-2 underline-offset-4 hover:decoration-brand-cyan",
   navigation:
-    "text-body-sm font-semibold text-current underline decoration-transparent decoration-2 underline-offset-8 hover:decoration-gold-500",
+    "text-body-sm font-semibold text-current underline decoration-transparent decoration-2 underline-offset-8 hover:decoration-link-decoration",
   subtle:
-    "text-body-sm text-gray-text underline decoration-navy-950/25 underline-offset-4 hover:text-navy-950 hover:decoration-gold-500",
+    "text-body-sm text-gray-text underline decoration-navy-950/25 underline-offset-4 hover:text-navy-950 hover:decoration-link-decoration",
 } as const;
 
 export type TextLinkProps = LinkProps &

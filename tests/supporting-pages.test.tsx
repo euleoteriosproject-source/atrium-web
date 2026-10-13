@@ -187,6 +187,9 @@ describe("M6C supporting pages", () => {
     ]) {
       expect(container.querySelector(`a[href="${href}"]`)).toBeTruthy();
     }
+    expect(
+      screen.getByRole("link", { name: "Demonstrações" }),
+    ).toHaveAttribute("href", "https://atrium-auto-center.netlify.app/");
     expect(container.querySelector('a[href^="/admin"]')).toBeNull();
   });
 

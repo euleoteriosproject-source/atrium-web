@@ -57,7 +57,10 @@ export default function SolutionsPage() {
                       <ul className="mt-5 space-y-3 text-body text-gray-text">
                         {solution.signs.slice(0, 3).map((sign) => (
                           <li key={sign} className="flex gap-3">
-                            <span aria-hidden="true" className="text-gold-500">
+                            <span
+                              aria-hidden="true"
+                              className="text-brand-blue"
+                            >
                               —
                             </span>
                             {sign}
@@ -70,7 +73,10 @@ export default function SolutionsPage() {
                       <ul className="mt-5 space-y-3 text-body text-gray-text">
                         {solution.situations.slice(0, 3).map((situation) => (
                           <li key={situation} className="flex gap-3">
-                            <span aria-hidden="true" className="text-gold-500">
+                            <span
+                              aria-hidden="true"
+                              className="text-brand-blue"
+                            >
                               +
                             </span>
                             {situation}
@@ -78,7 +84,7 @@ export default function SolutionsPage() {
                         ))}
                       </ul>
                     </div>
-                    <div className="border-l border-gold-500/60 pl-5 sm:col-span-2">
+                    <div className="border-l border-accent-strong/60 pl-5 sm:col-span-2">
                       <p className="text-caption font-bold tracking-wide text-navy-800 uppercase">
                         Resultado buscado
                       </p>

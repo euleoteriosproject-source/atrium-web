@@ -18,12 +18,16 @@ describe("Button", () => {
     expect(button).toHaveAttribute("aria-busy", "true");
   });
 
-  it("provides a gold accent variant for conversion CTAs on dark surfaces", () => {
+  it("provides the cyan brand accent for conversion CTAs on dark surfaces", () => {
     render(<Button variant="accent">Descobrir oportunidades</Button>);
 
     expect(
       screen.getByRole("button", { name: "Descobrir oportunidades" }),
-    ).toHaveClass("bg-gold-500", "text-navy-950", "border-gold-500");
+    ).toHaveClass(
+      "bg-accent-on-dark",
+      "text-brand-navy",
+      "border-accent-on-dark",
+    );
   });
 
   it("provides an outline variant without competing light-surface colors", () => {

@@ -110,7 +110,7 @@ export function SolutionDetailPage({ solution }: SolutionDetailPageProps) {
               <ul className="mt-9 space-y-4">
                 {solution.capabilities.map((capability) => (
                   <li key={capability} className="flex gap-4 text-body">
-                    <span aria-hidden="true" className="text-gold-500">
+                    <span aria-hidden="true" className="text-accent-strong">
                       +
                     </span>
                     {capability}
@@ -148,7 +148,7 @@ export function SolutionDetailPage({ solution }: SolutionDetailPageProps) {
                   key={index}
                   className="border-r border-b border-offwhite/15 p-7"
                 >
-                  <span className="text-caption font-bold text-gold-300">
+                  <span className="text-caption font-bold text-accent-on-dark">
                     {index}
                   </span>
                   <h3 className="mt-7 text-h4 font-semibold">{title}</h3>
@@ -158,7 +158,7 @@ export function SolutionDetailPage({ solution }: SolutionDetailPageProps) {
                 </li>
               ))}
             </ol>
-            <div className="mt-12 max-w-3xl border-l border-gold-500/60 pl-6">
+            <div className="mt-12 max-w-3xl border-l border-accent-strong/60 pl-6">
               <h2 className="text-h3 font-semibold">{solution.trust.title}</h2>
               <p className="mt-4 text-body text-offwhite/70">
                 {solution.trust.description}

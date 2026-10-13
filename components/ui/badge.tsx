@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 
 const variants = {
   neutral: "border-navy-950/10 bg-gray-bg text-gray-text",
-  accent: "border-gold-500/30 bg-gold-300/15 text-navy-950",
+  accent: "border-brand-blue/30 bg-accent-soft text-brand-navy",
   dark: "border-offwhite/15 bg-offwhite/8 text-offwhite",
 } as const;
 

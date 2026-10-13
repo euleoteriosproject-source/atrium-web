@@ -13,8 +13,8 @@ export function IconBox({ tone = "light", className, ...props }: IconBoxProps) {
       className={cn(
         "inline-flex size-11 items-center justify-center rounded-control border",
         tone === "light"
-          ? "border-gold-500/30 bg-gold-300/15 text-navy-950"
-          : "border-gold-300/30 bg-gold-300/10 text-gold-300",
+          ? "border-brand-blue/30 bg-accent-soft text-brand-navy"
+          : "border-brand-cyan/30 bg-brand-cyan/10 text-accent-on-dark",
         className,
       )}
       {...props}

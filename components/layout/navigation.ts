@@ -1,5 +1,9 @@
 export const primaryNavigation = [
   { label: "Soluções", href: "/solucoes" },
+  {
+    label: "Demonstrações",
+    href: "https://atrium-auto-center.netlify.app/",
+  },
   { label: "Como trabalhamos", href: "/#como-trabalhamos" },
   { label: "Case", href: "/cases/cred-marvi" },
   { label: "Sobre", href: "/sobre" },
