@@ -208,6 +208,37 @@ describe("M6C supporting pages", () => {
       screen.getByText(/A Atrium existe para entender/i),
     ).toBeInTheDocument();
     expect(screen.getByText("Vinicius Euleoterio")).toBeInTheDocument();
+    expect(screen.getByText("Founder & Software Engineer")).toBeInTheDocument();
+    const founderImage = screen.getByAltText(
+      "Retrato de Vinicius Euleoterio, fundador da Atrium",
+    );
+    expect(decodeURIComponent(founderImage.getAttribute("src") ?? "")).toContain(
+      "/people/vinicius-euleoterio.jpg",
+    );
+
+    for (const principle of [
+      "Tecnologia honesta",
+      "Pequeno por escolha",
+      "Segurança",
+      "Transparência",
+      "Humano onde importa",
+      "Resultado acima do hype",
+    ]) {
+      expect(screen.getByText(principle)).toBeInTheDocument();
+    }
+
+    for (const signal of [
+      "8+ anos",
+      "Backend & arquitetura",
+      "Sistemas críticos",
+      "Tecnologia aplicada",
+    ]) {
+      expect(screen.getByText(signal)).toBeInTheDocument();
+    }
+
+    expect(
+      screen.getByText(/Mais de 8 anos de experiência em engenharia de software/i),
+    ).toBeInTheDocument();
   });
 
   it("describes the real privacy processors and internal lead operation", () => {
