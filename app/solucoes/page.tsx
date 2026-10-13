@@ -7,6 +7,7 @@ import { Footer } from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar";
 import { Section } from "@/components/layout/section";
 import { Eyebrow } from "@/components/ui/eyebrow";
+import { LinkButton } from "@/components/ui/link-button";
 import { TextLink } from "@/components/ui/text-link";
 import { solutions } from "@/content/solutions";
 import { buildDiagnosticHref } from "@/domain/diagnostic/preselection";
@@ -59,18 +60,18 @@ export default function SolutionsPage() {
                 {scenarios.map(([label, id], index) => (
                   <li
                     key={id}
-                    className="group bg-surface-white shadow-[0_1px_0_rgb(7_24_50_/_0.08)]"
+                    className="group"
                   >
                     <a
                       href={`#${id}`}
-                      className="motion-interactive flex min-h-36 flex-col justify-between gap-6 border-t-2 border-transparent p-5 font-semibold transition-[background-color,color,border-color,transform] hover:-translate-y-0.5 hover:border-brand-blue hover:bg-surface-mist sm:p-6"
+                      className="motion-interactive flex min-h-44 flex-col justify-between gap-6 rounded-[1rem] border border-navy-950/10 bg-surface-raised p-5 font-semibold shadow-[var(--shadow-soft)] transition-[border-color,box-shadow,transform] hover:-translate-y-0.5 hover:border-brand-blue/35 hover:shadow-[var(--shadow-raised)] focus-visible:outline-offset-4 sm:p-6"
                     >
-                      <span className="text-caption text-gray-text">
+                      <span className="text-caption font-bold text-brand-blue-deep">
                         {String(index + 1).padStart(2, "0")}
                       </span>
-                      <span className="flex items-end justify-between gap-4 text-body">
-                        {label}
-                        <span aria-hidden="true">↓</span>
+                      <span className="flex items-end justify-between gap-4">
+                        <span className="max-w-[13rem] text-body">{label}</span>
+                        <span aria-hidden="true" className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-brand-blue/18 bg-surface-mist text-brand-blue-deep transition-transform group-hover:translate-y-0.5">↓</span>
                       </span>
                     </a>
                   </li>
@@ -82,14 +83,14 @@ export default function SolutionsPage() {
 
         <Section background="white">
           <Container>
-            <div className="space-y-8">
+            <div className="space-y-10">
               {solutions.map((solution) => (
                 <article
                   key={solution.slug}
                   id={solutionAnchors[solution.slug]}
-                  className="scroll-mt-24 border-t border-navy-950/15 py-14 first:border-t-0 first:pt-0"
+                  className="scroll-mt-24 rounded-[1.125rem] border border-navy-950/10 bg-surface-feature p-6 shadow-[var(--shadow-raised)] sm:p-9 lg:p-11"
                 >
-                  <div className="grid gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:gap-16">
+                  <div className="grid gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:gap-12">
                     <div>
                       <span className="text-caption font-bold text-gray-text">
                         {solution.index}
@@ -101,7 +102,7 @@ export default function SolutionsPage() {
                         {solution.problem}
                       </p>
                     </div>
-                    <div className="border-l-2 border-accent-strong bg-surface-mist p-6 sm:p-8">
+                    <div className="rounded-xl border border-brand-blue/12 bg-surface-mist p-6 shadow-[inset_3px_0_0_var(--color-accent-strong)] sm:p-8">
                       <p className="text-caption font-bold tracking-wide text-navy-800 uppercase">
                         Resultado buscado
                       </p>
@@ -111,8 +112,8 @@ export default function SolutionsPage() {
                     </div>
                   </div>
 
-                  <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:ml-[calc(36%+2rem)]">
-                    <div>
+                  <div className="mt-10 grid overflow-hidden rounded-xl border border-navy-950/9 bg-surface-flat sm:grid-cols-2">
+                    <div className="p-6 sm:border-r sm:border-navy-950/9 sm:p-7">
                       <h3 className="text-h4 font-semibold">Sinais comuns</h3>
                       <ul className="mt-5 space-y-3 text-body text-gray-text">
                         {solution.signs.slice(0, 3).map((sign) => (
@@ -128,7 +129,7 @@ export default function SolutionsPage() {
                         ))}
                       </ul>
                     </div>
-                    <div>
+                    <div className="border-t border-navy-950/9 p-6 sm:border-t-0 sm:p-7">
                       <h3 className="text-h4 font-semibold">Exemplos</h3>
                       <ul className="mt-5 space-y-3 text-body text-gray-text">
                         {solution.situations.slice(0, 3).map((situation) => (
@@ -144,34 +145,21 @@ export default function SolutionsPage() {
                         ))}
                       </ul>
                     </div>
-                    <div className="flex flex-col gap-4 border-t border-navy-950/12 pt-6 sm:col-span-2 sm:flex-row sm:flex-wrap sm:items-center">
-                      <TextLink href={`/solucoes/${solution.slug}`}>
-                        Entender esta solução <span aria-hidden="true">→</span>
-                      </TextLink>
-                      <span
-                        aria-hidden="true"
-                        className="hidden text-navy-950/25 sm:block"
-                      >
-                        /
-                      </span>
-                      <TextLink
+                    <div className="flex flex-col items-start gap-3 border-t border-navy-950/9 bg-white p-6 sm:col-span-2 sm:flex-row sm:flex-wrap sm:items-center sm:p-7">
+                      <LinkButton href={`/solucoes/${solution.slug}`}>
+                        Entender esta solução <span aria-hidden="true" className="editorial-arrow">→</span>
+                      </LinkButton>
+                      <LinkButton
                         href={buildDiagnosticHref({ goal: solution.goal })}
+                        variant="secondary"
                       >
                         Diagnóstico gratuito
-                      </TextLink>
+                      </LinkButton>
                       {solution.slug === "sites-e-portais" ? (
-                        <>
-                          <span
-                            aria-hidden="true"
-                            className="hidden text-navy-950/25 sm:block"
-                          >
-                            /
-                          </span>
-                          <TextLink href="/demonstracoes#auto-center">
+                          <TextLink href="/demonstracoes#auto-center" className="sm:ml-auto">
                             Ver demonstração Auto Center{" "}
                             <span aria-hidden="true">→</span>
                           </TextLink>
-                        </>
                       ) : null}
                     </div>
                   </div>
