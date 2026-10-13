@@ -18,7 +18,7 @@ describe("M2 homepage", () => {
     expect(
       screen.getByRole("heading", {
         level: 2,
-        name: "Quanto trabalho da sua empresa ainda depende de alguém fazer tudo manualmente?",
+        name: "O trabalho invisível também custa tempo.",
       }),
     ).toBeInTheDocument();
     expect(
@@ -91,6 +91,28 @@ describe("M2 homepage", () => {
     expect(externalProof).toHaveAttribute(
       "rel",
       expect.stringContaining("noopener"),
+    );
+    expect(externalProof).toHaveTextContent("↗");
+    expect(
+      screen.getByAltText(/Página inicial publicada da Cred Marvi/i),
+    ).toHaveAttribute("src", expect.stringContaining("cred-marvi-preview.png"));
+  });
+
+  it("presents real work early and keeps Auto Center framed as a demonstration", () => {
+    render(<Home />);
+
+    expect(
+      screen.getByRole("heading", { name: "Prova real antes da promessa." }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Demonstração Atrium")).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: /Explorar demonstração/i }),
+    ).toHaveAttribute("href", "/demonstracoes#auto-center");
+    expect(
+      screen.getByAltText(/demonstração Atrium para oficinas/i),
+    ).toHaveAttribute(
+      "src",
+      expect.stringContaining("auto-center-preview.png"),
     );
   });
 });

@@ -48,22 +48,22 @@ export default function SolutionsPage() {
           compact
         />
 
-        <Section background="muted" spacing="compact">
+        <Section background="warm" spacing="compact">
           <Container>
             <Eyebrow>Encontre seu cenário</Eyebrow>
             <h2 className="mt-4 text-h3 font-semibold">
               O que você quer melhorar primeiro?
             </h2>
             <nav aria-label="Atalhos para soluções" className="mt-8">
-              <ul className="grid border-t border-l border-navy-950/15 sm:grid-cols-2 lg:grid-cols-4">
+              <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 {scenarios.map(([label, id], index) => (
                   <li
                     key={id}
-                    className="border-r border-b border-navy-950/15 bg-offwhite"
+                    className="group bg-surface-white shadow-[0_1px_0_rgb(7_24_50_/_0.08)]"
                   >
                     <a
                       href={`#${id}`}
-                      className="motion-interactive flex min-h-36 flex-col justify-between gap-6 p-5 font-semibold transition-colors hover:bg-navy-950 hover:text-offwhite sm:p-6"
+                      className="motion-interactive flex min-h-36 flex-col justify-between gap-6 border-t-2 border-transparent p-5 font-semibold transition-[background-color,color,border-color,transform] hover:-translate-y-0.5 hover:border-brand-blue hover:bg-surface-mist sm:p-6"
                     >
                       <span className="text-caption text-gray-text">
                         {String(index + 1).padStart(2, "0")}
@@ -80,14 +80,14 @@ export default function SolutionsPage() {
           </Container>
         </Section>
 
-        <Section>
+        <Section background="white">
           <Container>
             <div className="space-y-8">
               {solutions.map((solution) => (
                 <article
                   key={solution.slug}
                   id={solutionAnchors[solution.slug]}
-                  className="scroll-mt-24 border-t border-navy-950/15 py-12 first:border-t-0 first:pt-0"
+                  className="scroll-mt-24 border-t border-navy-950/15 py-14 first:border-t-0 first:pt-0"
                 >
                   <div className="grid gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:gap-16">
                     <div>
@@ -101,7 +101,7 @@ export default function SolutionsPage() {
                         {solution.problem}
                       </p>
                     </div>
-                    <div className="border-l-2 border-accent-strong bg-gray-bg p-6 sm:p-8">
+                    <div className="border-l-2 border-accent-strong bg-surface-mist p-6 sm:p-8">
                       <p className="text-caption font-bold tracking-wide text-navy-800 uppercase">
                         Resultado buscado
                       </p>
@@ -111,7 +111,7 @@ export default function SolutionsPage() {
                     </div>
                   </div>
 
-                  <div className="mt-9 grid gap-8 sm:grid-cols-2 lg:ml-[calc(36%+2rem)]">
+                  <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:ml-[calc(36%+2rem)]">
                     <div>
                       <h3 className="text-h4 font-semibold">Sinais comuns</h3>
                       <ul className="mt-5 space-y-3 text-body text-gray-text">

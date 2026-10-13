@@ -29,9 +29,13 @@ const legalNavigation = [
 
 export function Footer() {
   return (
-    <footer className="bg-navy-950 py-10 text-offwhite sm:py-12">
+    <footer className="relative overflow-hidden bg-navy-950 py-12 text-offwhite sm:py-16">
+      <div
+        aria-hidden="true"
+        className="absolute top-0 left-0 h-px w-1/3 bg-accent-on-dark/70"
+      />
       <Container>
-        <div className="grid gap-10 border-b border-offwhite/12 pb-10 sm:grid-cols-2 md:grid-cols-[1.2fr_1fr_0.8fr] md:gap-12 lg:gap-20">
+        <div className="grid gap-10 border-b border-offwhite/12 pb-12 sm:grid-cols-2 md:grid-cols-[1.35fr_1fr_0.8fr] md:gap-12 lg:gap-24">
           <div className="max-w-sm sm:col-span-2 md:col-span-1">
             <Link
               href="/"
@@ -40,7 +44,7 @@ export function Footer() {
             >
               <BrandLogo decorative surface="dark" className="h-9 w-auto" />
             </Link>
-            <p className="mt-4 text-body-sm text-offwhite/70">
+            <p className="mt-5 max-w-xs font-serif text-h4 text-offwhite/75">
               Tecnologia que transforma operação em resultado.
             </p>
           </div>

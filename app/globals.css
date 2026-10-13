@@ -6,6 +6,12 @@
   --color-brand-blue: #1677ff;
   --color-brand-cyan: #27c8f5;
   --color-brand-off-white: #f8f9fc;
+  --color-surface-warm: #f5f2ec;
+  --color-surface-white: #ffffff;
+  --color-surface-cloud: #eef2f6;
+  --color-surface-mist: #eaf3fb;
+  --color-surface-cyan: #e7f8fc;
+  --color-surface-elevated: #ffffff;
   --color-accent-strong: #1757e8;
   --color-accent-soft: #dff7fe;
   --color-accent-on-dark: #27c8f5;
@@ -55,6 +61,8 @@
   --radius-card: 0.5rem;
   --shadow-card:
     0 1px 1px rgb(11 19 32 / 0.025), 0 8px 24px rgb(11 19 32 / 0.035);
+  --shadow-project:
+    0 1px 0 rgb(7 24 50 / 0.05), 0 24px 70px rgb(7 24 50 / 0.13);
 }
 
 :root {
@@ -126,6 +134,24 @@
 
   .flow-pulse {
     animation: flow-pulse 3.2s var(--ease-atrium) infinite;
+  }
+
+  .project-image {
+    transition: transform 700ms var(--ease-atrium);
+  }
+
+  .project-frame:hover .project-image,
+  .project-frame:focus-within .project-image {
+    transform: scale(1.018);
+  }
+
+  .editorial-arrow {
+    transition: transform var(--motion-fast) var(--ease-atrium);
+  }
+
+  a:hover .editorial-arrow,
+  button:hover .editorial-arrow {
+    transform: translateX(0.2rem);
   }
 }
 

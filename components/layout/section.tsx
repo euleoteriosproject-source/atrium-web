@@ -4,7 +4,11 @@ import { cn } from "@/lib/utils";
 
 const backgrounds = {
   light: "bg-offwhite text-navy-950",
+  white: "bg-surface-white text-navy-950",
+  warm: "bg-surface-warm text-navy-950",
   muted: "bg-gray-bg text-navy-950",
+  mist: "bg-surface-mist text-navy-950",
+  cyan: "bg-surface-cyan text-navy-950",
   dark: "bg-navy-950 text-offwhite",
 } as const;
 

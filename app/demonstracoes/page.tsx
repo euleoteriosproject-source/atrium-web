@@ -6,6 +6,7 @@ import { Container } from "@/components/layout/container";
 import { Footer } from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar";
 import { Section } from "@/components/layout/section";
+import { ProjectPreview } from "@/components/projects/project-preview";
 import { Badge } from "@/components/ui/badge";
 import { LinkButton } from "@/components/ui/link-button";
 import { SectionHeader } from "@/components/ui/section-header";
@@ -38,11 +39,11 @@ export default function DemonstrationsPage() {
           compact
         />
 
-        <Section id="auto-center" className="scroll-mt-24">
+        <Section id="auto-center" background="warm" className="scroll-mt-24">
           <Container>
-            <div className="grid gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20">
+            <div className="grid items-start gap-12 lg:grid-cols-[0.78fr_1.22fr] lg:gap-16">
               <div>
-                <Badge variant="accent">Auto Center · Atrium Conversão</Badge>
+                <Badge variant="accent">Demonstração Atrium</Badge>
                 <h2 className="mt-6 text-h2 font-semibold">
                   Uma experiência digital que começa antes do WhatsApp.
                 </h2>
@@ -54,11 +55,12 @@ export default function DemonstrationsPage() {
                 <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
                   <LinkButton
                     href="https://atrium-auto-center.netlify.app/"
-                    target="_blank"
-                    rel="noopener noreferrer"
                     size="lg"
                   >
-                    Abrir demonstração <span aria-hidden="true">↗</span>
+                    Explorar demonstração{" "}
+                    <span aria-hidden="true" className="editorial-arrow">
+                      →
+                    </span>
                   </LinkButton>
                   <LinkButton
                     href="#interesse-auto-center"
@@ -74,18 +76,33 @@ export default function DemonstrationsPage() {
                 </p>
               </div>
 
-              <div className="border border-navy-950/12 bg-gray-bg p-7 sm:p-9">
-                <h3 className="text-h4 font-semibold">O que ela demonstra</h3>
-                <ul className="mt-7 space-y-4 text-body text-gray-text">
-                  {demonstratedCapabilities.map((capability) => (
-                    <li key={capability} className="flex gap-3">
-                      <span aria-hidden="true" className="text-brand-blue">
-                        +
-                      </span>
-                      {capability}
-                    </li>
-                  ))}
-                </ul>
+              <div>
+                <ProjectPreview
+                  src="/projects/auto-center-preview.png"
+                  alt="Página inicial da demonstração Atrium para oficinas e auto centers"
+                  href="https://atrium-auto-center.netlify.app/"
+                  priority
+                />
+                <p className="mt-5 text-caption text-gray-text">
+                  Auto Center — Atrium Conversão · experiência pública navegável
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-16 grid gap-8 border-t border-navy-950/12 pt-10 lg:grid-cols-[0.72fr_1.28fr]">
+              <h3 className="text-h3 font-semibold">O que ela demonstra</h3>
+              <div className="grid gap-x-10 gap-y-4 sm:grid-cols-2">
+                {demonstratedCapabilities.map((capability) => (
+                  <p
+                    key={capability}
+                    className="flex gap-3 border-b border-navy-950/10 pb-4 text-body text-gray-text"
+                  >
+                    <span aria-hidden="true" className="text-brand-blue">
+                      +
+                    </span>
+                    {capability}
+                  </p>
+                ))}
               </div>
             </div>
           </Container>
@@ -93,7 +110,7 @@ export default function DemonstrationsPage() {
 
         <Section
           id="interesse-auto-center"
-          background="muted"
+          background="mist"
           className="scroll-mt-24"
         >
           <Container className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
@@ -102,7 +119,7 @@ export default function DemonstrationsPage() {
               title="Leve o contexto certo para a primeira conversa."
               description="Você já escolheu a demonstração. Agora só precisamos de contexto suficiente para iniciar a conversa."
             />
-            <div className="border border-navy-950/12 bg-offwhite p-6 shadow-card sm:p-9">
+            <div className="rounded-[1rem] border border-navy-950/10 bg-surface-white p-6 shadow-[var(--shadow-project)] sm:p-9">
               <DemoInterestForm />
             </div>
           </Container>

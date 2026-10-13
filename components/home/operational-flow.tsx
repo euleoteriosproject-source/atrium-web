@@ -1,139 +1,139 @@
-const fragmentedInputs = ["WhatsApp", "Planilha", "E-mail"] as const;
+const journey = [
+  ["01", "Intenção", "O que a pessoa precisa"],
+  ["02", "Contexto", "Informação relevante"],
+  ["03", "Organização", "Fluxo e regras claras"],
+  ["04", "Atendimento", "Humano mais preparado"],
+] as const;
 
 export function HeroOperationalFlow() {
   return (
     <figure
-      className="relative mx-auto w-full max-w-xl"
+      className="relative mx-auto w-full max-w-xl lg:translate-y-8"
       aria-labelledby="hero-flow-caption"
     >
-      <div className="absolute inset-8 rounded-full bg-brand-cyan/10 blur-3xl" />
-      <div className="relative min-h-105 overflow-hidden rounded-card border border-offwhite/15 bg-navy-800/60 p-5 shadow-[0_28px_80px_rgb(0_0_0_/_0.2)] sm:min-h-120 sm:p-8">
+      <div className="absolute -inset-6 rounded-full bg-brand-cyan/8 blur-3xl" />
+      <div className="relative overflow-hidden rounded-[1.25rem] border border-offwhite/14 bg-navy-800/50 p-5 shadow-[0_36px_90px_rgb(0_0_0_/_0.25)] backdrop-blur-sm sm:p-7">
         <div
           aria-hidden="true"
-          className="flow-grid absolute inset-0 opacity-30"
+          className="flow-grid absolute inset-0 opacity-20"
         />
-        <div className="relative grid h-full min-h-95 grid-cols-[1fr_auto_1fr] items-center gap-3 sm:min-h-104 sm:gap-6">
-          <div className="space-y-4">
-            {fragmentedInputs.map((input, index) => (
-              <div
-                key={input}
-                className="flow-node motion-section rounded-control border border-offwhite/15 bg-navy-950/65 px-3 py-3 text-caption font-semibold text-offwhite/75 transition-[border-color,transform] sm:px-4 sm:text-body-sm"
-                style={{ animationDelay: `${index * 400}ms` }}
-              >
-                {input}
-              </div>
-            ))}
-          </div>
-
-          <div aria-hidden="true" className="relative h-56 w-10 sm:w-16">
-            <span className="absolute top-1/2 left-0 h-px w-full -translate-y-1/2 bg-brand-blue/55" />
-            <span className="flow-pulse absolute top-1/2 left-0 size-2 -translate-y-1/2 rounded-full bg-accent-on-dark" />
-          </div>
-
-          <div className="relative">
-            <div className="rounded-card border border-brand-cyan/35 bg-offwhite p-4 text-navy-950 sm:p-6">
-              <span className="block text-caption font-bold tracking-[0.14em] text-gray-text uppercase">
-                Fluxo organizado
-              </span>
-              <span className="mt-3 block font-serif text-h4">
-                Informação chega ao lugar certo.
-              </span>
-              <div className="mt-6 space-y-2" aria-hidden="true">
-                <span className="block h-1.5 w-full rounded-full bg-navy-950/15" />
-                <span className="block h-1.5 w-4/5 rounded-full bg-brand-blue/60" />
-                <span className="block h-1.5 w-3/5 rounded-full bg-navy-950/15" />
-              </div>
-            </div>
-          </div>
+        <div className="relative flex items-center justify-between border-b border-offwhite/12 pb-5">
+          <span className="text-eyebrow font-bold tracking-[0.14em] text-accent-on-dark uppercase">
+            Jornada operacional
+          </span>
+          <span className="flex items-center gap-2 text-caption text-offwhite/50">
+            <span className="flow-pulse relative block size-1.5 rounded-full bg-accent-on-dark" />
+            contexto em movimento
+          </span>
         </div>
+        <ol className="relative mt-3">
+          {journey.map(([index, title, description], itemIndex) => (
+            <li
+              key={title}
+              className="group grid grid-cols-[2.5rem_1fr] gap-3 border-b border-offwhite/10 py-5 last:border-b-0 sm:grid-cols-[3rem_0.8fr_1fr] sm:items-center"
+            >
+              <span className="text-caption font-bold text-accent-on-dark/75">
+                {index}
+              </span>
+              <span className="text-body font-semibold text-offwhite">
+                {title}
+              </span>
+              <span className="col-start-2 text-body-sm text-offwhite/55 sm:col-start-auto">
+                {description}
+              </span>
+              {itemIndex < journey.length - 1 ? (
+                <span
+                  aria-hidden="true"
+                  className="absolute left-[1.15rem] mt-12 h-5 w-px bg-brand-cyan/45 sm:left-[1.4rem]"
+                />
+              ) : null}
+            </li>
+          ))}
+        </ol>
       </div>
       <figcaption id="hero-flow-caption" className="sr-only">
-        Representação de entradas fragmentadas sendo organizadas em um fluxo de
-        informação claro.
+        Jornada que transforma intenção em contexto, organização e atendimento
+        humano mais preparado.
       </figcaption>
     </figure>
   );
 }
 
-const beforeFlow = [
-  "Cliente",
-  "WhatsApp",
-  "Pessoa",
-  "Planilha",
-  "Pessoa",
-  "E-mail",
-  "Sistema",
-  "Outra pessoa",
+const comparison = [
+  {
+    label: "Antes",
+    title: "Contexto fragmentado",
+    items: ["Perguntas repetidas", "Trabalho manual", "Informação dispersa"],
+    className: "bg-surface-warm",
+  },
+  {
+    label: "Atrium",
+    title: "Estrutura proporcional",
+    items: ["Jornada clara", "Fluxo e regras", "Tecnologia na medida"],
+    className: "bg-surface-cyan",
+  },
+  {
+    label: "Depois",
+    title: "Atendimento preparado",
+    items: [
+      "Contexto organizado",
+      "Menos repetição",
+      "Humano no momento certo",
+    ],
+    className: "bg-navy-950 text-offwhite",
+  },
 ] as const;
-
-const betterFlow = [
-  "Cliente",
-  "Jornada digital",
-  "Regras + automação",
-  "Integrações",
-  "Informação organizada",
-  "Humano quando necessário",
-] as const;
-
-function FlowSequence({
-  label,
-  items,
-  better = false,
-}: {
-  label: string;
-  items: readonly string[];
-  better?: boolean;
-}) {
-  return (
-    <div className={better ? "bg-navy-950 text-offwhite" : "bg-white"}>
-      <p
-        className={`border-b px-5 py-4 text-eyebrow font-bold tracking-[0.14em] uppercase sm:px-7 ${
-          better
-            ? "border-offwhite/15 text-accent-on-dark"
-            : "border-navy-950/10 text-gray-text"
-        }`}
-      >
-        {label}
-      </p>
-      <ol className="flex flex-col p-5 sm:p-7">
-        {items.map((item, index) => (
-          <li
-            key={`${label}-${item}-${index}`}
-            className="flex min-h-12 items-center gap-3"
-          >
-            <span
-              aria-hidden="true"
-              className={`flex size-6 shrink-0 items-center justify-center rounded-full border text-caption ${
-                better
-                  ? "border-brand-cyan/45 text-accent-on-dark"
-                  : "border-navy-950/20 text-gray-text"
-              }`}
-            >
-              {index + 1}
-            </span>
-            <span className="text-body-sm font-semibold">{item}</span>
-            {index < items.length - 1 ? (
-              <span
-                aria-hidden="true"
-                className={`ml-auto text-body-lg ${
-                  better ? "text-accent-on-dark" : "text-navy-950/55"
-                }`}
-              >
-                ↓
-              </span>
-            ) : null}
-          </li>
-        ))}
-      </ol>
-    </div>
-  );
-}
 
 export function OperationComparison() {
   return (
-    <div className="grid overflow-hidden rounded-card border border-navy-950/12 shadow-card md:grid-cols-2">
-      <FlowSequence label="Hoje" items={beforeFlow} />
-      <FlowSequence label="Uma operação melhor" items={betterFlow} better />
+    <div className="relative grid overflow-hidden rounded-[1rem] border border-navy-950/10 shadow-[var(--shadow-project)] lg:grid-cols-3">
+      {comparison.map((stage, index) => (
+        <article
+          key={stage.label}
+          className={`${stage.className} relative min-h-80 p-7 sm:p-9`}
+        >
+          <div className="flex items-center justify-between gap-4">
+            <p
+              className={`text-eyebrow font-bold tracking-[0.14em] uppercase ${
+                index === 2 ? "text-accent-on-dark" : "text-brand-blue-deep"
+              }`}
+            >
+              {stage.label}
+            </p>
+            <span
+              className={index === 2 ? "text-offwhite/35" : "text-navy-950/25"}
+            >
+              0{index + 1}
+            </span>
+          </div>
+          <h3 className="mt-12 max-w-xs font-serif text-h3">{stage.title}</h3>
+          <ul
+            className={`mt-8 space-y-3 text-body-sm ${index === 2 ? "text-offwhite/68" : "text-gray-text"}`}
+          >
+            {stage.items.map((item) => (
+              <li key={item} className="flex items-center gap-3">
+                <span
+                  aria-hidden="true"
+                  className={
+                    index === 2 ? "text-accent-on-dark" : "text-brand-blue"
+                  }
+                >
+                  —
+                </span>
+                {item}
+              </li>
+            ))}
+          </ul>
+          {index < comparison.length - 1 ? (
+            <span
+              aria-hidden="true"
+              className="absolute right-5 bottom-5 z-10 flex size-9 items-center justify-center rounded-full border border-navy-950/15 bg-white text-navy-950 lg:top-1/2 lg:-right-[1.15rem] lg:bottom-auto lg:-translate-y-1/2"
+            >
+              →
+            </span>
+          ) : null}
+        </article>
+      ))}
     </div>
   );
 }
