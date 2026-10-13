@@ -6,6 +6,7 @@ import { Container } from "@/components/layout/container";
 import { Footer } from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar";
 import { Section } from "@/components/layout/section";
+import { ProjectPreview } from "@/components/projects/project-preview";
 import { LinkButton } from "@/components/ui/link-button";
 import { SectionHeader } from "@/components/ui/section-header";
 
@@ -61,6 +62,38 @@ export default function CredMarviCasePage() {
           secondaryLabel="Entender a abordagem"
         />
 
+        <Section background="warm" spacing="compact">
+          <Container className="grid items-center gap-10 lg:grid-cols-[1.2fr_0.8fr] lg:gap-16">
+            <ProjectPreview
+              src="/projects/cred-marvi-preview.png"
+              alt="Página inicial publicada da Cred Marvi, com soluções de crédito e atendimento humano"
+              href="https://credmarvi.netlify.app/"
+              external
+              priority
+            />
+            <div>
+              <p className="text-eyebrow font-bold tracking-[0.14em] text-brand-blue-deep uppercase">
+                Projeto publicado
+              </p>
+              <h2 className="mt-5 text-h3 font-semibold">
+                Veja a experiência funcionando no mundo real.
+              </h2>
+              <p className="mt-5 text-body text-gray-text">
+                A interface pública mostra como contexto, clareza e atendimento
+                humano convivem na mesma jornada.
+              </p>
+              <LinkButton
+                href="https://credmarvi.netlify.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-8"
+              >
+                Ver site da Cred Marvi <span aria-hidden="true">↗</span>
+              </LinkButton>
+            </div>
+          </Container>
+        </Section>
+
         <Section>
           <Container className="grid gap-12 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
             <SectionHeader
@@ -87,7 +120,7 @@ export default function CredMarviCasePage() {
           </Container>
         </Section>
 
-        <Section background="muted">
+        <Section background="mist">
           <Container className="grid gap-12 lg:grid-cols-2 lg:gap-20">
             <div>
               <SectionHeader
@@ -105,7 +138,7 @@ export default function CredMarviCasePage() {
                 ))}
               </ul>
             </div>
-            <div className="border border-navy-950/12 bg-offwhite p-7 sm:p-9">
+            <div className="border-l-2 border-accent-strong bg-surface-white p-7 shadow-card sm:p-9">
               <p className="text-eyebrow font-bold tracking-[0.14em] text-navy-800 uppercase">
                 Problema operacional
               </p>
@@ -129,12 +162,9 @@ export default function CredMarviCasePage() {
               title="Organizar a jornada antes do handoff."
               description="A proposta foi estruturar o contexto e preservar a conversa humana para o momento em que ela gera mais valor."
             />
-            <ol className="mt-12 grid border-t border-l border-navy-950/12 md:grid-cols-2 xl:grid-cols-4">
+            <ol className="mt-12 grid gap-x-10 gap-y-8 border-t border-navy-950/12 pt-8 md:grid-cols-2 xl:grid-cols-4">
               {approach.map(([index, title, description]) => (
-                <li
-                  key={index}
-                  className="border-r border-b border-navy-950/12 p-7"
-                >
+                <li key={index} className="border-l border-navy-950/14 pl-6">
                   <span className="text-caption font-bold text-gray-text">
                     {index}
                   </span>
@@ -201,15 +231,6 @@ export default function CredMarviCasePage() {
               e das necessidades observadas — não de uma expansão automática de
               escopo.
             </p>
-            <LinkButton
-              href="https://credmarvi.netlify.app/"
-              target="_blank"
-              rel="noopener noreferrer"
-              variant="secondary"
-              className="mt-8"
-            >
-              Ver site da Cred Marvi <span aria-hidden="true">↗</span>
-            </LinkButton>
           </Container>
         </Section>
 

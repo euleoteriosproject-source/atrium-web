@@ -18,7 +18,7 @@ describe("M2 homepage", () => {
     expect(
       screen.getByRole("heading", {
         level: 2,
-        name: "Quanto trabalho da sua empresa ainda depende de alguém fazer tudo manualmente?",
+        name: "O trabalho invisível também custa tempo.",
       }),
     ).toBeInTheDocument();
     expect(
@@ -92,5 +92,55 @@ describe("M2 homepage", () => {
       "rel",
       expect.stringContaining("noopener"),
     );
+    expect(externalProof).toHaveTextContent("↗");
+    expect(
+      screen.getByAltText(/Página inicial publicada da Cred Marvi/i),
+    ).toHaveAttribute("src", expect.stringContaining("cred-marvi-preview.png"));
+  });
+
+  it("presents real work early and keeps Auto Center framed as a demonstration", () => {
+    render(<Home />);
+
+    expect(
+      screen.getByRole("heading", { name: "Prova real antes da promessa." }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Demonstração Atrium")).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: /Explorar demonstração/i }),
+    ).toHaveAttribute("href", "/demonstracoes#auto-center");
+    expect(
+      screen.getByAltText(/demonstração Atrium para oficinas/i),
+    ).toHaveAttribute(
+      "src",
+      expect.stringContaining("auto-center-preview.png"),
+    );
+  });
+
+  it("renders fragmented channels converging into an organized flow", () => {
+    render(<Home />);
+
+    for (const concept of ["WhatsApp", "Planilha", "E-mail"]) {
+      expect(screen.getByText(concept)).toBeInTheDocument();
+    }
+    expect(screen.getByText("Fluxo organizado")).toBeInTheDocument();
+    expect(
+      screen.getByText("Informação chega ao lugar certo."),
+    ).toBeInTheDocument();
+  });
+
+  it("keeps the four work steps in an ordered process", () => {
+    const { container } = render(<Home />);
+    const process = container.querySelector("#como-trabalhamos ol");
+
+    expect(process).toBeInTheDocument();
+    expect(process?.querySelectorAll(":scope > li")).toHaveLength(4);
+    for (const title of [
+      "Entendemos",
+      "Desenhamos",
+      "Construímos",
+      "Evoluímos",
+    ]) {
+      expect(screen.getByRole("heading", { name: title })).toBeInTheDocument();
+    }
   });
 });

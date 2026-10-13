@@ -6,6 +6,15 @@
   --color-brand-blue: #1677ff;
   --color-brand-cyan: #27c8f5;
   --color-brand-off-white: #f8f9fc;
+  --color-surface-warm: #f5f2ec;
+  --color-surface-white: #ffffff;
+  --color-surface-cloud: #eef2f6;
+  --color-surface-mist: #eaf3fb;
+  --color-surface-cyan: #e7f8fc;
+  --color-surface-flat: #f8f9fc;
+  --color-surface-raised: #ffffff;
+  --color-surface-elevated: #ffffff;
+  --color-surface-feature: #ffffff;
   --color-accent-strong: #1757e8;
   --color-accent-soft: #dff7fe;
   --color-accent-on-dark: #27c8f5;
@@ -52,9 +61,17 @@
 
   --container-content: 80rem;
   --radius-control: 0.5rem;
-  --radius-card: 0.5rem;
+  --radius-card: 1rem;
+  --shadow-soft:
+    0 1px 2px rgb(7 24 50 / 0.04), 0 8px 24px rgb(7 24 50 / 0.055);
+  --shadow-raised:
+    0 2px 4px rgb(7 24 50 / 0.045), 0 18px 44px rgb(7 24 50 / 0.09);
+  --shadow-feature:
+    0 3px 8px rgb(0 0 0 / 0.08), 0 34px 90px rgb(0 0 0 / 0.24);
   --shadow-card:
     0 1px 1px rgb(11 19 32 / 0.025), 0 8px 24px rgb(11 19 32 / 0.035);
+  --shadow-project:
+    0 1px 0 rgb(7 24 50 / 0.05), 0 24px 70px rgb(7 24 50 / 0.13);
 }
 
 :root {
@@ -126,6 +143,41 @@
 
   .flow-pulse {
     animation: flow-pulse 3.2s var(--ease-atrium) infinite;
+  }
+
+  .flow-signal {
+    animation: flow-signal 3.8s var(--ease-atrium) infinite;
+  }
+
+  .project-image {
+    transition: transform 700ms var(--ease-atrium);
+  }
+
+  .project-frame:hover .project-image,
+  .project-frame:focus-within .project-image {
+    transform: scale(1.018);
+  }
+
+  .editorial-arrow {
+    transition: transform var(--motion-fast) var(--ease-atrium);
+  }
+
+  a:hover .editorial-arrow,
+  button:hover .editorial-arrow {
+    transform: translateX(0.2rem);
+  }
+}
+
+@keyframes flow-signal {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(0.82);
+  }
+
+  42% {
+    opacity: 1;
+    transform: scale(1);
   }
 }
 

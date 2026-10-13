@@ -69,6 +69,10 @@ describe("M6C supporting pages", () => {
       expect(document.querySelector(`a[href="#${id}"]`)).toBeTruthy();
     }
     expect(
+      screen.getByRole("navigation", { name: "Atalhos para soluções" })
+        .querySelectorAll("a"),
+    ).toHaveLength(4);
+    expect(
       screen.getByRole("link", { name: /Ver demonstração Auto Center/i }),
     ).toHaveAttribute("href", "/demonstracoes#auto-center");
     expect(
@@ -78,6 +82,9 @@ describe("M6C supporting pages", () => {
           article.textContent?.includes("Ver demonstração Auto Center"),
         ),
     ).toHaveLength(1);
+    for (const article of screen.getAllByRole("article")) {
+      expect(article.textContent).not.toContain(" / ");
+    }
   });
 
   it("presents the Auto Center demonstration as honest commercial proof", () => {
@@ -94,21 +101,31 @@ describe("M6C supporting pages", () => {
     ).toBeInTheDocument();
 
     const externalLink = screen.getByRole("link", {
-      name: /Abrir demonstração/i,
+      name: /Explorar demonstração/i,
     });
     expect(externalLink).toHaveAttribute(
       "href",
       "https://atrium-auto-center.netlify.app/",
     );
-    expect(externalLink).toHaveAttribute("target", "_blank");
-    expect(externalLink).toHaveAttribute(
-      "rel",
-      expect.stringContaining("noopener"),
+    expect(externalLink).not.toHaveAttribute("target");
+    expect(externalLink).not.toHaveAttribute("rel");
+    expect(externalLink).toHaveTextContent("→");
+    expect(externalLink).not.toHaveTextContent("↗");
+    expect(
+      screen.getByAltText(/demonstração Atrium para oficinas/i),
+    ).toHaveAttribute(
+      "src",
+      expect.stringContaining("auto-center-preview.png"),
     );
-    expect(externalLink).toHaveAttribute(
-      "rel",
-      expect.stringContaining("noreferrer"),
-    );
+    expect(screen.getByText("O que ela demonstra")).toBeInTheDocument();
+    expect(screen.getByText("Prévia de handoff organizado")).toBeInTheDocument();
+    expect(screen.getByRole("textbox", { name: /Seu nome/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("textbox", { name: /Empresa ou negócio/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/seu nome e o nome da empresa/i),
+    ).toBeInTheDocument();
   });
 
   it.each([
@@ -164,6 +181,18 @@ describe("M6C supporting pages", () => {
       "https://credmarvi.netlify.app/",
     );
     expect(publicProject).toHaveAttribute("target", "_blank");
+    expect(publicProject).toHaveAttribute(
+      "rel",
+      expect.stringContaining("noopener"),
+    );
+    expect(publicProject).toHaveAttribute(
+      "rel",
+      expect.stringContaining("noreferrer"),
+    );
+    expect(publicProject).toHaveTextContent("↗");
+    expect(
+      screen.getByAltText(/Página inicial publicada da Cred Marvi/i),
+    ).toHaveAttribute("src", expect.stringContaining("cred-marvi-preview.png"));
   });
 
   it("presents Atrium as a company and keeps the founder as supporting proof", () => {

@@ -7,6 +7,7 @@ import { Footer } from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar";
 import { Section } from "@/components/layout/section";
 import { Eyebrow } from "@/components/ui/eyebrow";
+import { LinkButton } from "@/components/ui/link-button";
 import { TextLink } from "@/components/ui/text-link";
 import { solutions } from "@/content/solutions";
 import { buildDiagnosticHref } from "@/domain/diagnostic/preselection";
@@ -48,29 +49,29 @@ export default function SolutionsPage() {
           compact
         />
 
-        <Section background="muted" spacing="compact">
+        <Section background="warm" spacing="compact">
           <Container>
             <Eyebrow>Encontre seu cenário</Eyebrow>
             <h2 className="mt-4 text-h3 font-semibold">
               O que você quer melhorar primeiro?
             </h2>
             <nav aria-label="Atalhos para soluções" className="mt-8">
-              <ul className="grid border-t border-l border-navy-950/15 sm:grid-cols-2 lg:grid-cols-4">
+              <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 {scenarios.map(([label, id], index) => (
                   <li
                     key={id}
-                    className="border-r border-b border-navy-950/15 bg-offwhite"
+                    className="group"
                   >
                     <a
                       href={`#${id}`}
-                      className="motion-interactive flex min-h-36 flex-col justify-between gap-6 p-5 font-semibold transition-colors hover:bg-navy-950 hover:text-offwhite sm:p-6"
+                      className="motion-interactive flex min-h-44 flex-col justify-between gap-6 rounded-[1rem] border border-navy-950/15 bg-surface-raised p-5 font-semibold shadow-[var(--shadow-raised)] transition-[background-color,border-color,box-shadow,transform] hover:-translate-y-px hover:border-brand-blue/45 hover:bg-surface-mist/45 hover:shadow-[var(--shadow-project)] focus-visible:outline-offset-4 sm:p-6"
                     >
-                      <span className="text-caption text-gray-text">
+                      <span className="text-caption font-bold text-brand-blue-deep">
                         {String(index + 1).padStart(2, "0")}
                       </span>
-                      <span className="flex items-end justify-between gap-4 text-body">
-                        {label}
-                        <span aria-hidden="true">↓</span>
+                      <span className="flex items-end justify-between gap-4">
+                        <span className="max-w-[13rem] text-body">{label}</span>
+                        <span aria-hidden="true" className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-brand-blue/18 bg-surface-mist text-brand-blue-deep transition-transform group-hover:translate-y-0.5">↓</span>
                       </span>
                     </a>
                   </li>
@@ -80,16 +81,16 @@ export default function SolutionsPage() {
           </Container>
         </Section>
 
-        <Section>
+        <Section background="white">
           <Container>
-            <div className="space-y-8">
+            <div className="space-y-10">
               {solutions.map((solution) => (
                 <article
                   key={solution.slug}
                   id={solutionAnchors[solution.slug]}
-                  className="scroll-mt-24 border-t border-navy-950/15 py-12 first:border-t-0 first:pt-0"
+                  className="scroll-mt-24 rounded-[1.125rem] border border-navy-950/14 bg-surface-feature p-6 shadow-[var(--shadow-project)] sm:p-9 lg:p-11"
                 >
-                  <div className="grid gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:gap-16">
+                  <div className="grid gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:gap-12">
                     <div>
                       <span className="text-caption font-bold text-gray-text">
                         {solution.index}
@@ -101,7 +102,7 @@ export default function SolutionsPage() {
                         {solution.problem}
                       </p>
                     </div>
-                    <div className="border-l-2 border-accent-strong bg-gray-bg p-6 sm:p-8">
+                    <div className="flex min-h-44 flex-col justify-center rounded-xl border border-brand-blue/18 bg-surface-mist p-6 shadow-[inset_4px_0_0_var(--color-accent-strong)] sm:p-8">
                       <p className="text-caption font-bold tracking-wide text-navy-800 uppercase">
                         Resultado buscado
                       </p>
@@ -111,9 +112,9 @@ export default function SolutionsPage() {
                     </div>
                   </div>
 
-                  <div className="mt-9 grid gap-8 sm:grid-cols-2 lg:ml-[calc(36%+2rem)]">
-                    <div>
-                      <h3 className="text-h4 font-semibold">Sinais comuns</h3>
+                  <div className="mt-10 grid overflow-hidden rounded-xl border border-navy-950/12 bg-surface-flat sm:grid-cols-2">
+                    <div className="p-6 sm:border-r sm:border-navy-950/12 sm:p-7">
+                      <h3 className="text-h4 font-bold">Sinais comuns</h3>
                       <ul className="mt-5 space-y-3 text-body text-gray-text">
                         {solution.signs.slice(0, 3).map((sign) => (
                           <li key={sign} className="flex gap-3">
@@ -128,8 +129,8 @@ export default function SolutionsPage() {
                         ))}
                       </ul>
                     </div>
-                    <div>
-                      <h3 className="text-h4 font-semibold">Exemplos</h3>
+                    <div className="border-t border-navy-950/12 p-6 sm:border-t-0 sm:p-7">
+                      <h3 className="text-h4 font-bold">Exemplos</h3>
                       <ul className="mt-5 space-y-3 text-body text-gray-text">
                         {solution.situations.slice(0, 3).map((situation) => (
                           <li key={situation} className="flex gap-3">
@@ -144,34 +145,21 @@ export default function SolutionsPage() {
                         ))}
                       </ul>
                     </div>
-                    <div className="flex flex-col gap-4 border-t border-navy-950/12 pt-6 sm:col-span-2 sm:flex-row sm:flex-wrap sm:items-center">
-                      <TextLink href={`/solucoes/${solution.slug}`}>
-                        Entender esta solução <span aria-hidden="true">→</span>
-                      </TextLink>
-                      <span
-                        aria-hidden="true"
-                        className="hidden text-navy-950/25 sm:block"
-                      >
-                        /
-                      </span>
-                      <TextLink
+                    <div className="flex flex-col items-start gap-3 border-t border-navy-950/12 bg-white p-6 sm:col-span-2 sm:flex-row sm:flex-wrap sm:items-center sm:p-7">
+                      <LinkButton href={`/solucoes/${solution.slug}`}>
+                        Entender esta solução <span aria-hidden="true" className="editorial-arrow">→</span>
+                      </LinkButton>
+                      <LinkButton
                         href={buildDiagnosticHref({ goal: solution.goal })}
+                        variant="secondary"
                       >
                         Diagnóstico gratuito
-                      </TextLink>
+                      </LinkButton>
                       {solution.slug === "sites-e-portais" ? (
-                        <>
-                          <span
-                            aria-hidden="true"
-                            className="hidden text-navy-950/25 sm:block"
-                          >
-                            /
-                          </span>
-                          <TextLink href="/demonstracoes#auto-center">
+                          <TextLink href="/demonstracoes#auto-center" className="inline-flex min-h-11 items-center sm:ml-auto">
                             Ver demonstração Auto Center{" "}
                             <span aria-hidden="true">→</span>
                           </TextLink>
-                        </>
                       ) : null}
                     </div>
                   </div>
